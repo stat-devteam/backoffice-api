@@ -55,7 +55,7 @@ api.use(['/admin/*'], async(req, res, next) => {
             const [actionLogInsertResult, f1] = await pool.query(dbQuery.admin_action_log_insert.queryString, [userName, method, path, JSON.stringify(data)]);
         }
         catch (err) {
-            console.log('insert error', err);
+            console.log('insert error!', err);
         }
     }
 

@@ -28,7 +28,7 @@ const service_GET = async(req, res) => {
 
 const service_POST = async(req, res) => {
 
-    if (!req.body.serviceGroupId || !req.body.memberGroupId || !req.body.name) {
+    if (!req.body.serviceGroupId || !req.body.memberGroupId || !req.body.name || !req.body.accountId) {
         return sendRes(res, 400, { code: 3000, message: '요청 파라미터 확인' });
     }
 
@@ -36,10 +36,10 @@ const service_POST = async(req, res) => {
     const memberGroupId = req.body.memberGroupId;
     const name = req.body.name || null;
     const description = req.body.description || null;
-
+    const accountId = req.body.accountId
     try {
         const pool = await dbPool.getPool();
-        const [createService, f1] = await pool.query(dbQuery.service_create.queryString, [serviceGroupId, name, description, memberGroupId]);
+        const [createService, f1] = await pool.query(dbQuery.service_create.queryString, [serviceGroupId, name, description, memberGroupId, accountId]);
 
         return sendRes(res, 200, { result: true, serviceNumber: createService.insertId });
     }

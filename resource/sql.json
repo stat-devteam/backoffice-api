@@ -4,14 +4,19 @@
         "params": [],
         "desc": "한경 KAS 계정 GET ALL"
     },
+     "hankyung_klaytn_account_get_by_svc_grp_id" : {
+        "queryString": "SELECT * FROM hankyung_klaytn_account WHERE svc_grp_id = ?",
+        "params": ["svc_grp_id"],
+        "desc": "한경 KAS 계정 GET by 서비스 그룹 아이디"
+    },
     "hankyung_klaytn_account_get" : {
         "queryString": "SELECT * FROM hankyung_klaytn_account WHERE accnt_id = ?",
         "params": ["accnt_id"],
         "desc": "한경 KAS 계정 GET"
     },
     "hankyung_klaytn_account_create" : {
-        "queryString": "INSERT INTO hankyung_klaytn_account (accnt_id, name, address) VALUES (?, ?, ?)",
-        "params": ["account_id", "name", "address"],
+        "queryString": "INSERT INTO hankyung_klaytn_account (accnt_id, name, address, svc_grp_id) VALUES (?, ?, ?, ?)",
+        "params": ["account_id", "name", "address","svc_grp_id"],
         "desc": "한경 KAS 계정 생성"
     },
     "hankyung_klaytn_account_name_update" : {
@@ -41,7 +46,7 @@
     },
     "service_group_name_update" : {
         "queryString": "UPDATE service_group SET name = ? WHERE svc_grp_id = ?",
-        "params": ["name", "svc_grp_id"],
+        "params": ["name","svc_grp_id"],
         "desc": "service_group 이름 변경"
     },
     "service_group_apikey_update" : {
@@ -55,8 +60,8 @@
         "desc": "service_group api refresh"
     },
     "service_group_create" : {
-        "queryString": "INSERT INTO service_group (svc_grp_id, name, accnt_id, api_key_id, api_key_value) VALUES (?, ?, ?, ? , ?)",
-        "params": ["svc_grp_id", "name", "accnt_id", "api_key_id", "api_key_value"],
+        "queryString": "INSERT INTO service_group (svc_grp_id, name, api_key_id, api_key_value) VALUES (?, ?, ?, ?)",
+        "params": ["svc_grp_id", "name", "api_key_id", "api_key_value"],
         "desc": "service_group 생성"
     },
     "service_group_delete" : {
@@ -90,7 +95,7 @@
         "desc": "service 삭제"
     },
     "service_create" : {
-        "queryString": "INSERT INTO service (svc_grp_id, name, description , mbr_grp_id, reg_dt) VALUES (?, ?, ?, ?, now() )",
+        "queryString": "INSERT INTO service (svc_grp_id, name, description , mbr_grp_id, reg_dt, accnt_id) VALUES (?, ?, ?, ?, now(), ? )",
         "params": ["svc_grp_id", "name", "description" , "mbr_grp_id"],
         "desc": "service 생성"
     },

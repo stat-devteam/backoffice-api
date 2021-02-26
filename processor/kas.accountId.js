@@ -18,9 +18,11 @@ const kas_accountId_GET = async(req, res) => {
         const pool = await dbPool.getPool();
         const [klaytnAccountResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get.queryString, [req.params.account_id]);
 
-        accountObject.accountId = klaytnAccountResult[0].accnt_id;
+        accountObject.accnt_id = klaytnAccountResult[0].accnt_id;
         accountObject.name = klaytnAccountResult[0].name;
         accountObject.address = klaytnAccountResult[0].address;
+        accountObject.svc_grp_id = klaytnAccountResult[0].svc_grp_id;
+
     }
     catch (err) {
         console.log(err);

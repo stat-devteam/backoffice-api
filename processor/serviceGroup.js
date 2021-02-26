@@ -34,17 +34,15 @@ const serviceGroup_GET = async(req, res) => {
             return sendRes(res, 400, { code: 2011, message: 'ERROR', info: err.message })
         }
     }
-
 }
 
 const serviceGroup_POST = async(req, res) => {
 
-    if (!req.body.accountId || !req.body.name || !req.body.serviceGroupId) {
+    if (!req.body.name || !req.body.serviceGroupId) {
         return sendRes(res, 400, { code: 3000, message: '요청 파라미터 확인' })
     }
 
     const serviceGroupId = req.body.serviceGroupId || null;
-    const accountId = req.body.accountId || null;
     const name = req.body.name || null;
 
     var createApiKeyParams = {
@@ -98,7 +96,7 @@ const serviceGroup_POST = async(req, res) => {
 
     try {
         const pool = await dbPool.getPool();
-        await pool.query(dbQuery.service_group_create.queryString, [serviceGroupId, name, accountId, apiKeyId, apiKeyValue]);
+        await pool.query(dbQuery.service_group_create.queryString, [serviceGroupId, name, apiKeyId, apiKeyValue]);
         return sendRes(res, 200, { result: true })
     }
     catch (err) {

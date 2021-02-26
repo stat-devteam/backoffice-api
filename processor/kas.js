@@ -10,11 +10,19 @@ const kasInfo = require('../resource/kas.json');
 
 
 const kas_GET = async(req, res) => {
+
     try {
         const pool = await dbPool.getPool();
-        const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_all.queryString, []);
 
-        return sendRes(res, 200, { result: true, list: klaytnAccountAllResult });
+        if (req.query.svc_grp_id) {
+            const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_by_svc_grp_id.queryString, [req.query.svc_grp_id]);
+            return sendRes(res, 200, { result: true, list: klaytnAccountAllResult });
+        }
+        else {
+            const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_all.queryString, []);
+            return sendRes(res, 200, { result: true, list: klaytnAccountAllResult });
+        }
+
     }
     catch (err) {
         console.log(err);
@@ -23,7 +31,7 @@ const kas_GET = async(req, res) => {
 }
 
 const kas_POST = async(req, res) => {
-    if (!req.body.accountId || !req.body.name) {
+    if (!req.body.accountId || !req.body.name || !req.body.serviceGroupId) {
         return sendRes(res, 400, { code: 3000, message: '요청 파라미터 확인' })
     }
 
@@ -62,7 +70,7 @@ const kas_POST = async(req, res) => {
 
     try {
         const pool = await dbPool.getPool();
-        const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_create.queryString, [req.body.accountId, req.body.name, address]);
+        const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_create.queryString, [req.body.accountId, req.body.name, address, req.body.serviceGroupId]);
 
         return sendRes(res, 200, { result: true });
     }

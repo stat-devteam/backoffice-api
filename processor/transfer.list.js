@@ -9,6 +9,8 @@ const transfer_list_GET = async(req, res) => {
 
     let params = req.query;
     console.log('params', params);
+
+
     const type = params.type;
     const now = moment(new Date()).tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
     const memberGroupId = params.memberGroupId;
@@ -23,6 +25,15 @@ const transfer_list_GET = async(req, res) => {
     let pageSize = parseInt(params.pageSize) || 10;
     const optionType = params.optionType; //none, service,service_group
     const optionValue = params.optionValue;
+
+    if (!memberGroupId || !memberId) {
+        return sendRes(res, 400, { code: 3000, message: '요청 파라미터 확인 - memberGroupId or memberId' })
+    }
+
+    if (!optionValue) {
+        return sendRes(res, 400, { code: 3000, message: '요청 파라미터 확인 - 옵션 타입' })
+    }
+
 
     if (type === 'user') {
         if (optionType === 'service' && optionValue) {

@@ -23,7 +23,7 @@ const bulk_list_GET = async(req, res) => {
     else if (optionType === 'service' && optionValue) {
         return bulkListOptionTypeService(res, optionValue, startDate, endDate, pageOffset, pageSize);
     }
-    else if (optionType === 'admin_id' && optionValue) {
+    else if (optionType === 'email' && optionValue) {
         return bulkListOptionTypeAdminId(res, optionValue, startDate, endDate, pageOffset, pageSize);
     }
 
@@ -59,8 +59,8 @@ async function bulkListOptionTypeService(res, optionValue, startDate, endDate, p
 async function bulkListOptionTypeAdminId(res, optionValue, startDate, endDate, pageOffset, pageSize) {
     try {
         const pool = await dbPool.getPool();
-        const [bulkListResult, f1] = await pool.query(dbQuery.bulk_transfer_get_list_by_admin_id.queryString, [optionValue, startDate, endDate, pageOffset, pageSize]);
-        const [bulkTotalCountResult, f2] = await pool.query(dbQuery.bulk_transfer_get_total_count_by_admin_id.queryString, [optionValue, startDate, endDate]);
+        const [bulkListResult, f1] = await pool.query(dbQuery.bulk_transfer_get_list_by_email.queryString, [optionValue, startDate, endDate, pageOffset, pageSize]);
+        const [bulkTotalCountResult, f2] = await pool.query(dbQuery.bulk_transfer_get_total_count_by_email.queryString, [optionValue, startDate, endDate]);
         return sendRes(res, 200, { result: true, list: bulkListResult, totalCount: bulkTotalCountResult[0].total, })
     }
     catch (err) {

@@ -240,7 +240,7 @@
         "desc": "bulk transfer total count"
     },
     "bulk_transfer_get_list_by_service" : {
-        "queryString" : "SELECT b.*, s.name as svc_name, s.description as svc_desc, s.mbr_grp_id as svc_mbr_grp_id FROM bulk_transfer b INNER JOIN service s ON s.svc_num = b.svc_num WHERE b.svc_num = ? AND b.reg_dt BETWEEN ? AND ? ORDER BY b.reg_dt DESC LIMIT ?, ?",
+        "queryString" : "SELECT b.*, s.name as svc_name, s.description as svc_desc, s.mbr_grp_id as svc_mbr_grp_id, a.email, a.company, a.name FROM bulk_transfer b INNER JOIN service s ON s.svc_num = b.svc_num LEFT OUTER JOIN admin a ON b.admin_id = a.admin_id WHERE b.svc_num = ? AND b.reg_dt BETWEEN ? AND ? ORDER BY b.reg_dt DESC LIMIT ?, ?",
         "params": ["svc_num", "start_date", "end_date", "page_offset", "page_size"],
         "desc": "bulk transfer list where service"
     },
@@ -249,14 +249,14 @@
         "params": ["svc_num", "start_date", "end_date"],
         "desc": "bulk transfer total count where service"
     },
-    "bulk_transfer_get_list_by_admin_id" : {
-        "queryString" : "SELECT b.*, s.name as svc_name, s.description as svc_desc, s.mbr_grp_id as svc_mbr_grp_id FROM bulk_transfer b INNER JOIN service s ON s.svc_num = b.svc_num WHERE b.admin_id = ? AND b.reg_dt BETWEEN ? AND ? ORDER BY b.reg_dt DESC LIMIT ?, ?",
-        "params": ["admin_id", "start_date", "end_date", "page_offset", "page_size"],
+    "bulk_transfer_get_list_by_email" : {
+        "queryString" : "SELECT b.*, s.name as svc_name, s.description as svc_desc, s.mbr_grp_id as svc_mbr_grp_id, a.email, a.company, a.name FROM bulk_transfer b INNER JOIN service s ON s.svc_num = b.svc_num LEFT OUTER JOIN admin a ON b.admin_id = a.admin_id WHERE a.email = ? AND b.reg_dt BETWEEN ? AND ? ORDER BY b.reg_dt DESC LIMIT ?, ?",
+        "params": ["email", "start_date", "end_date", "page_offset", "page_size"],
         "desc": "bulk transfer list where admin_id"
     },
-    "bulk_transfer_get_total_count_by_admin_id" : {
-        "queryString" : "SELECT COUNT(*) as total FROM bulk_transfer b INNER JOIN service s ON s.svc_num = b.svc_num WHERE b.admin_id = ? AND b.reg_dt BETWEEN ? AND ?",
-        "params": ["admin_id", "start_date", "end_date"],
+    "bulk_transfer_get_total_count_by_email" : {
+        "queryString" : "SELECT COUNT(*) as total FROM bulk_transfer b INNER JOIN service s ON s.svc_num = b.svc_num LEFT OUTER JOIN admin a ON b.admin_id = a.admin_id WHERE a.email = ? AND b.reg_dt BETWEEN ? AND ?",
+        "params": ["email", "start_date", "end_date"],
         "desc": "bulk transfer total count where admin_id"
     },
     "bulk_transfer_get" : {

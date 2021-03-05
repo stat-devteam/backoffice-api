@@ -5,6 +5,7 @@ const smHandler = require("../modules/util_sm.js");
 const dbPool = require('../modules/util_rds_pool.js');
 const dbQuery = require('../resource/sql.json');
 const jwt_decode = require("jwt-decode");
+const psHandler = require('../modules/util_ps.js');
 
 const testProcessor = require('../processor/test.js');
 const bulkBulkSeqProcessor = require('../processor/bulk.bulkSeq.js');
@@ -27,6 +28,22 @@ const adminUserAdminUserIdProcessor = require('../processor/adminUser.adminUserI
 const adminUserProcessor = require('../processor/adminUser.js');
 const adminUserDefaultPartProcessor = require("../processor/adminUser.defaultBackofficePart.js");
 const actionLogProcessor = require("../processor/actionLog.js");
+
+
+api.use(['/admin/*'], async(req, res, next) => {
+    console.log('Maintenance - ParameterStore Check res', res);
+    console.log('Maintenance - ParameterStore Check req', req);
+    const pass = req.query.pass;
+    const isMaintenance = await psHandler.getParameterStoreValue(process.env.PARAMETER_STORE_VALUE, 'backoffice', pass);
+    console.log('isMaintenance', isMaintenance)
+    if (isMaintenance) {
+        res.header('maintenance', isMaintenance);
+    }
+    else {
+        res.header('maintenance', '');
+    }
+    next();
+});
 
 
 api.use(['/admin/*'], async(req, res, next) => {
@@ -59,7 +76,6 @@ api.use(['/admin/*'], async(req, res, next) => {
         }
     }
 
-
     next();
 });
 
@@ -76,7 +92,9 @@ api.finally((req, res) => {
 api.get('/clearCache', async(req, res) => {
     console.log('clearCache', req);
     smHandler.clearCache();
-    return { status: 'ok' };
+    psHandler.clearCache();
+    let body = { result: true };
+    return res.status(200).cors().json(body);
 });
 
 

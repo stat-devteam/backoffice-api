@@ -68,7 +68,7 @@ const bulk_bulkSeq_GET = async(req, res) => {
 
 const sendRes = (res, status, body) => {
     return res.status(status).cors().json(body);
-};
+    };
 
 
 module.exports = { bulk_bulkSeq_GET };

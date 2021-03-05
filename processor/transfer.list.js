@@ -26,16 +26,17 @@ const transfer_list_GET = async(req, res) => {
     const optionType = params.optionType; //none, service,service_group
     const optionValue = params.optionValue;
 
-    if (!memberGroupId || !memberId) {
-        return sendRes(res, 400, { code: 3000, message: '요청 파라미터 확인 - memberGroupId or memberId' })
-    }
-
-    if (!optionValue) {
-        return sendRes(res, 400, { code: 3000, message: '요청 파라미터 확인 - 옵션 타입' })
-    }
 
 
     if (type === 'user') {
+        if (!memberGroupId || !memberId) {
+            return sendRes(res, 400, { code: 3000, message: '요청 파라미터 확인 - memberGroupId or memberId' })
+        }
+
+        if (!optionValue) {
+            return sendRes(res, 400, { code: 3000, message: '요청 파라미터 확인 - 옵션 타입' })
+        }
+
         if (optionType === 'service' && optionValue) {
             return transferListUserOptionTypeService(res, memberGroupId, memberId, optionValue, startDate, endDate, transferType, pageOffset, pageSize);
         }
@@ -45,12 +46,19 @@ const transfer_list_GET = async(req, res) => {
         }
     }
     else if (type === 'service') {
+        if (!params.serviceNumber) {
+            return sendRes(res, 400, { code: 3000, message: '요청 파라미터 확인 - serviceNumber' })
+        }
+
         const serviceNumber = params.serviceNumber;
         return transferListService(res, serviceNumber, transferType, startDate, endDate, pageOffset, pageSize);
 
-
     }
     else if (type === 'service_group') {
+        if (!params.serviceGroupId) {
+            return sendRes(res, 400, { code: 3000, message: '요청 파라미터 확인 - serviceGroupId' })
+        }
+
         const serviceGroupId = params.serviceGroupId;
         const serviceGroupIdsArray = serviceGroupId.split(',');
         return transferListServiceGroup(res, serviceGroupIdsArray, transferType, startDate, endDate, pageOffset, pageSize);

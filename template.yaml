@@ -31,3 +31,4 @@ Resources:
           PLAN_ID : was7u8
           SM_ID : shift/product/kasinfo
           COGNITO_USER_POOL_ID : ap-northeast-2_vouGSpYU7
+          PARAMETER_STORE_VALUE : 'dev_maintenance'

@@ -141,6 +141,6 @@ const generatePassword = () => {
 
 const sendRes = (res, status, body) => {
     return res.status(status).cors().json(body);
-};
+    };
 
 module.exports = { adminUser_GET, adminUser_POST };

@@ -158,9 +158,11 @@ const adminUser_adminUserId_DELETE = async(req, res) => {
 }
 
 
-
 const sendRes = (res, status, body) => {
-    return res.status(status).cors().json(body);
+    return res.status(status).cors({
+        exposeHeaders: 'maintenance',
+        headers: 'pass',
+    }).json(body);
 };
 
 module.exports = { adminUser_adminUserId_GET, adminUser_adminUserId_PUT, adminUser_adminUserId_DELETE };

@@ -71,7 +71,10 @@ async function linkListUserType(res, memberGroupId, memberId, pageOffset, pageSi
 }
 
 const sendRes = (res, status, body) => {
-    return res.status(status).cors().json(body);
+    return res.status(status).cors({
+        exposeHeaders: 'maintenance',
+        headers: 'pass',
+    }).json(body);
 };
 
 module.exports = { link_list_GET };

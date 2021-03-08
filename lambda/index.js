@@ -14,6 +14,8 @@ const bulkLinkCheckProcessor = require('../processor/bulk.link-check.js');
 const bulkListProcessor = require('../processor/bulk.list.js');
 const kasAccountIdProcessor = require('../processor/kas.accountId.js');
 const kasProcessor = require('../processor/kas.js');
+const kasSendProcessor = require("../processor/kas.send.js");
+const kasTransferListProcessor = require("../processor/kas.transferList.js");
 const linkListProcessor = require('../processor/link.list.js');
 const memberGroupProcessor = require('../processor/memberGroup.js');
 const rewardListProcessor = require('../processor/reward.list.js');
@@ -110,6 +112,8 @@ api.put('/admin/kas/:account_id', kasAccountIdProcessor.kas_accountId_PUT);
 api.delete('/admin/kas/:account_id', kasAccountIdProcessor.kas_accountId_DELETE);
 api.get('/admin/kas', kasProcessor.kas_GET);
 api.post('/admin/kas', kasProcessor.kas_POST);
+api.post('/admin/kas/send', kasSendProcessor.kas_send_POST);
+api.get('/admin/kas/transfer_list', kasTransferListProcessor.kas_transferList_GET);
 //link
 api.get('/admin/link/list', linkListProcessor.link_list_GET);
 //member-group

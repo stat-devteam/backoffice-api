@@ -8,6 +8,8 @@ const smHandler = require('../modules/util_sm.js');
 const dbQuery = require('../resource/sql.json');
 const kasInfo = require('../resource/kas.json');
 
+const BigNumber = require('bignumber.js');
+
 
 const kas_GET = async(req, res) => {
 
@@ -17,6 +19,51 @@ const kas_GET = async(req, res) => {
         if (req.query.svc_grp_id) {
             const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_by_svc_grp_id.queryString, [req.query.svc_grp_id]);
             return sendRes(res, 200, { result: true, list: klaytnAccountAllResult });
+        }
+        else if (req.query.balance) {
+
+            const secretValue = await smHandler.getSecretValue(process.env.SM_ID);
+
+            const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_all.queryString, []);
+            for (let i in klaytnAccountAllResult) {
+                let target = klaytnAccountAllResult[i];
+                // Get current Balance
+                const jsonRpcHeader = {
+                    'x-chain-id': kasInfo.xChainId,
+                    "Content-Type": "application/json"
+                }
+                const jsonRpcAuth = {
+                    username: secretValue.kas_access_key,
+                    password: secretValue.kas_secret_access_key,
+                }
+                const jsonRpcBody = { "jsonrpc": "2.0", "method": "klay_getBalance", "params": [target.address, "latest"], "id": 1 }
+
+                const kalynJsonRpcResponse = await axios
+                    .post(kasInfo.jsonRpcUrl, jsonRpcBody, {
+                        headers: jsonRpcHeader,
+                        auth: jsonRpcAuth
+                    })
+                    .catch((err) => {
+                        console.log('jsonrpc send fali', err);
+                        let errorBody = {
+                            code: 1023,
+                            message: '[KAS] 잔액 조회 에러',
+                        };
+                        return { error: errorBody }
+                    });
+                console.log('kalynJsonRpcResponse', kalynJsonRpcResponse);
+
+                if (kalynJsonRpcResponse.error) {
+                    return sendRes(res, 400, kalynJsonRpcResponse.error)
+                }
+                //result 0x1212kjsdvsdfo
+                const currentBalance = kalynJsonRpcResponse.data.result ? new BigNumber(kalynJsonRpcResponse.data.result).toString(10) : null;
+                target.currentBalance = currentBalance;
+            }
+
+            return sendRes(res, 200, { result: true, list: klaytnAccountAllResult });
+
+
         }
         else {
             const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_all.queryString, []);
@@ -81,7 +128,10 @@ const kas_POST = async(req, res) => {
 }
 
 const sendRes = (res, status, body) => {
-    return res.status(status).cors().json(body);
+    return res.status(status).cors({
+        exposeHeaders: 'maintenance',
+        headers: 'pass',
+    }).json(body);
 };
 
 module.exports = { kas_GET, kas_POST };

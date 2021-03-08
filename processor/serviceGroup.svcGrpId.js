@@ -64,7 +64,10 @@ const serviceGroup_svcGrpId_DELETE = async(req, res) => {
 }
 
 const sendRes = (res, status, body) => {
-    return res.status(status).cors().json(body);
+    return res.status(status).cors({
+        exposeHeaders: 'maintenance',
+        headers: 'pass',
+    }).json(body);
 };
 
 

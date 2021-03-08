@@ -97,7 +97,10 @@ const kas_accountId_DELETE = async(req, res) => {
 }
 
 const sendRes = (res, status, body) => {
-    return res.status(status).cors().json(body);
+    return res.status(status).cors({
+        exposeHeaders: 'maintenance',
+        headers: 'pass',
+    }).json(body);
 };
 
 module.exports = { kas_accountId_GET, kas_accountId_PUT, kas_accountId_DELETE };

@@ -363,5 +363,35 @@
         "queryString" : "SELECT COUNT(*) as total FROM admin_action_log WHERE admin_id IN (?) AND log_dt BETWEEN ? AND ?",
         "params": ["admin_ids","start_date", "end_date"],
         "desc": "action log total count"
+    },
+    "klaytn_account_transfer_create" : {
+        "queryString" : "INSERT INTO klaytn_account_transfer (from_accnt_id, to_accnt_id, amount, transfer_reg_dt, tx_status, from_accnt_before_balance, to_accnt_before_balance, transfer_memo) VALUES(?,?,?,now(),?,?,?,?)",
+        "params": ["from_accnt_id","to_accnt_id", "amount","tx_status", "from_accnt_before_balance", "to_accnt_before_balance", "transfer_memo"],
+        "desc": "klaytn_account_transfer_create"
+    },
+    "klaytn_account_transfer_update_status" : {
+        "queryString" : "UPDATE klaytn_account_transfer SET tx_status =?, transfer_end_dt = now() WHERE transfer_seq = ?",
+        "params" : ["tx_status", "transfer_seq"],
+        "desc" : "klaytn_account_transfer_update_status"
+    },
+    "klaytn_account_transfer_update_status_hash_fee" : {
+        "queryString" : "UPDATE klaytn_account_transfer SET tx_status =?, tx_hash =? , fee =? , transfer_end_dt = now() WHERE transfer_seq = ?",
+        "params" : ["tx_status", "tx_hash", "fee", "transfer_seq"],
+        "desc" : "klaytn_account_transfer_update_status"
+    },
+    "klaytn_account_transfer_update_status_hash" : {
+        "queryString" : "UPDATE klaytn_account_transfer SET tx_status =?, tx_hash =?, transfer_end_dt = now() WHERE transfer_seq = ?",
+        "params" : ["tx_status", "tx_hash", "transfer_seq"],
+        "desc" : "klaytn_account_transfer_update_status"
+    },
+    "klaytn_account_transfer_list" : {
+        "queryString" : "SELECT * FROM klaytn_account_transfer WHERE transfer_reg_dt BETWEEN ? AND ? ORDER BY transfer_reg_dt DESC LIMIT ?, ?",
+        "params" : ["start_date", "end_date","page_offset", "page_size"],
+        "desc" : "klaytn_account_transfer_list"
+    },
+    "klaytn_account_transfer_list_total" : {
+        "queryString" : "SELECT COUNT(*) as total FROM klaytn_account_transfer WHERE transfer_reg_dt BETWEEN ? AND ?",
+        "params" : ["start_date", "end_date"],
+        "desc" : "klaytn_account_transfer_list_total"
     }
 }

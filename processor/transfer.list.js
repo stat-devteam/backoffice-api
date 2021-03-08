@@ -119,7 +119,10 @@ async function transferListServiceGroup(res, serviceGroupIdsArray, transferType,
 }
 
 const sendRes = (res, status, body) => {
-    return res.status(status).cors().json(body);
+    return res.status(status).cors({
+        exposeHeaders: 'maintenance',
+        headers: 'pass',
+    }).json(body);
 };
 
 module.exports = { transfer_list_GET };

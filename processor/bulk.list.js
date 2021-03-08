@@ -70,7 +70,10 @@ async function bulkListOptionTypeAdminId(res, optionValue, startDate, endDate, p
 }
 
 const sendRes = (res, status, body) => {
-    return res.status(status).cors().json(body);
+    return res.status(status).cors({
+        exposeHeaders: 'maintenance',
+        headers: 'pass',
+    }).json(body);
 };
 
 

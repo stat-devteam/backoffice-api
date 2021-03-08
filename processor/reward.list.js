@@ -76,7 +76,10 @@ async function rewardListOptionTypeServiceGroup(res, memberId, memberGroupId, pa
 }
 
 const sendRes = (res, status, body) => {
-    return res.status(status).cors().json(body);
+    return res.status(status).cors({
+        exposeHeaders: 'maintenance',
+        headers: 'pass',
+    }).json(body);
 };
 
 

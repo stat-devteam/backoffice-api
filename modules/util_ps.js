@@ -31,21 +31,27 @@ const clearCache = () => {
 
 
 const returnLogic = (object, key, pass) => {
+    let targetValue = object[key];
+    console.log('returnLogic targetValue', targetValue);
 
-    if (object[key]) {
+    if (targetValue) {
         if (pass === object['pass']) {
             console.log('object[pass]', object['pass'])
             return false;
         }
-        else {
+        else if (targetValue.stop) {
             let returnString = Base64.encode(JSON.stringify(object));
             console.log('returnString', returnString)
             return returnString;
+        }
+        else {
+            return false;
         }
     }
     else {
         return false;
     }
+
 }
 
 const getParameterStoreValue = async(parameterStoreId, key, pass, boolFromCache = true) => {
@@ -58,9 +64,18 @@ const getParameterStoreValue = async(parameterStoreId, key, pass, boolFromCache 
         const parameterStoreObj = psMap.get(parameterStoreId);
         console.log('[ParameterStore Util] get Map()', parameterStoreObj);
         if (parameterStoreObj) {
-            return returnLogic(parameterStoreObj, key, pass)
+            let targetValue = parameterStoreObj[key];
+            console.log('parameterStoreObj logic - targetValue', targetValue)
+            if (targetValue.ready) {
+                console.log('Ready Status Not Cache')
+            }
+            else {
+                return returnLogic(parameterStoreObj, key, pass)
+
+            }
         }
     }
+
 
     var params = {
         Name: parameterStoreId,

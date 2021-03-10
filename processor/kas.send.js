@@ -20,14 +20,12 @@ const kas_send_POST = async(req, res) => {
 
     const from = body.from;
     const from_address = body.from_address;
-    const from_balance = body.from_balance;
     const to = body.to;
     const to_address = body.to_address;
-    const to_balance = body.to_balance
     const amount = body.amount;
     const memo = body.memo;
 
-    if (!from || !from_address || !from_balance || !to || !to_address || !to_balance || !amount) {
+    if (!from || !from_address || !to || !to_address || !amount) {
         return sendRes(res, 400, { code: 3000, message: '요청 파라미터 확인' })
     }
 
@@ -36,7 +34,80 @@ const kas_send_POST = async(req, res) => {
         const pool = await dbPool.getPool();
         const secretValue = await smHandler.getSecretValue(process.env.SM_ID);
         const pebAmount = new BigNumber(amount).multipliedBy(new BigNumber(1e+18)).toString(10);
-        // insert befroe submit transfer row
+
+        //[Task] check Balance
+        const jsonRpcHeader = {
+            'x-chain-id': kasInfo.xChainId,
+            "Content-Type": "application/json"
+        }
+        const jsonRpcAuth = {
+            username: secretValue.kas_access_key,
+            password: secretValue.kas_secret_access_key,
+        }
+
+        //발신 계정
+        const fromJsonRpcBody = { "jsonrpc": "2.0", "method": "klay_getBalance", "params": [from_address, "latest"], "id": 1 }
+
+        const fromKalynJsonRpcResponse = await axios
+            .post(kasInfo.jsonRpcUrl, fromJsonRpcBody, {
+                headers: jsonRpcHeader,
+                auth: jsonRpcAuth
+            })
+            .catch((err) => {
+                console.log('jsonrpc send fali', err);
+                let errorBody = {
+                    code: 1023,
+                    message: '[KAS] 잔액 조회 에러 - 발신 계정',
+                };
+                return { error: errorBody }
+            });
+        console.log('fromKalynJsonRpcResponse', fromKalynJsonRpcResponse);
+
+        if (fromKalynJsonRpcResponse.error) {
+            return sendRes(res, 400, fromKalynJsonRpcResponse.error)
+        }
+        if (fromKalynJsonRpcResponse.data.error) {
+            return sendRes(res, 400, {
+                code: 1023,
+                message: '[발신 계정- 잔액 조회 에러] ' + fromKalynJsonRpcResponse.data.error.message
+            });
+        }
+        //result 0x1212kjsdvsdfo
+        const from_balance = fromKalynJsonRpcResponse.data.result ? new BigNumber(fromKalynJsonRpcResponse.data.result).toString(10) : null;
+
+
+        // 수신 계정
+        const toJsonRpcBody = { "jsonrpc": "2.0", "method": "klay_getBalance", "params": [to_address, "latest"], "id": 1 }
+
+        const toKalynJsonRpcResponse = await axios
+            .post(kasInfo.jsonRpcUrl, toJsonRpcBody, {
+                headers: jsonRpcHeader,
+                auth: jsonRpcAuth
+            })
+            .catch((err) => {
+                console.log('jsonrpc send fali', err);
+                let errorBody = {
+                    code: 1023,
+                    message: '[KAS] 잔액 조회 에러 - 수신 계정',
+                };
+                return { error: errorBody }
+            });
+        console.log('toKalynJsonRpcResponse', toKalynJsonRpcResponse);
+
+        if (toKalynJsonRpcResponse.error) {
+            return sendRes(res, 400, toKalynJsonRpcResponse.error)
+        }
+        if (toKalynJsonRpcResponse.data.error) {
+            return sendRes(res, 400, {
+                code: 1023,
+                message: '[수신 계정 - 잔액 조회 에러] ' + toKalynJsonRpcResponse.data.error.message
+            });
+        }
+        //result 0x1212kjsdvsdfo
+        const to_balance = toKalynJsonRpcResponse.data.result ? new BigNumber(toKalynJsonRpcResponse.data.result).toString(10) : null;
+
+
+        //[TASK] insert befroe submit transfer row
         const [insertResult, f1] = await pool.query(dbQuery.klaytn_account_transfer_create.queryString, [
             from, to, pebAmount, 'before_submit', from_balance, to_balance, memo
         ]);

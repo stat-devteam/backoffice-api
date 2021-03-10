@@ -365,8 +365,8 @@
         "desc": "action log total count"
     },
     "klaytn_account_transfer_create" : {
-        "queryString" : "INSERT INTO klaytn_account_transfer (from_accnt_id, to_accnt_id, amount, transfer_reg_dt, tx_status, from_accnt_before_balance, to_accnt_before_balance, transfer_memo) VALUES(?,?,?,now(),?,?,?,?)",
-        "params": ["from_accnt_id","to_accnt_id", "amount","tx_status", "from_accnt_before_balance", "to_accnt_before_balance", "transfer_memo"],
+        "queryString" : "INSERT INTO klaytn_account_transfer (from_accnt_id, to_accnt_id, to_address, amount, transfer_reg_dt, tx_status, from_accnt_before_balance, to_accnt_before_balance, transfer_memo) VALUES(?,?,?,?,now(),?,?,?,?)",
+        "params": ["from_accnt_id","to_accnt_id","to_address", "amount","tx_status", "from_accnt_before_balance", "to_accnt_before_balance", "transfer_memo"],
         "desc": "klaytn_account_transfer_create"
     },
     "klaytn_account_transfer_update_status" : {

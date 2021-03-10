@@ -109,7 +109,7 @@ const kas_send_POST = async(req, res) => {
 
         //[TASK] insert befroe submit transfer row
         const [insertResult, f1] = await pool.query(dbQuery.klaytn_account_transfer_create.queryString, [
-            from, to, pebAmount, 'before_submit', from_balance, to_balance, memo
+            from, to, to_address, pebAmount, 'before_submit', from_balance, to_balance, memo
         ]);
 
         const transferSeq = insertResult.insertId;

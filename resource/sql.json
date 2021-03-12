@@ -260,7 +260,7 @@
         "desc": "bulk transfer total count where admin_id"
     },
     "bulk_transfer_get" : {
-        "queryString" : "SELECT * FROM bulk_transfer b INNER JOIN service s ON b.svc_num = s.svc_num WHERE b.bulk_seq = ?",
+        "queryString" : "SELECT *, b.reg_dt as reg_dt FROM bulk_transfer b INNER JOIN service s ON b.svc_num = s.svc_num WHERE b.bulk_seq = ?",
         "params" : ["bulk_seq"],
         "desc" : "bulk transfer get"
     },

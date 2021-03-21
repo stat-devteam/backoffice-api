@@ -26,6 +26,7 @@ Resources:
           DB_PORT: '3306'
           DB_USER: coredot
           DB_ENDPOINT: shift-dev-aurora-cluster.cluster-c89v5jzuome9.ap-northeast-2.rds.amazonaws.com
+          DB_RO_ENDPOINT: shift-dev-aurora-cluster.cluster-ro-c89v5jzuome9.ap-northeast-2.rds.amazonaws.com
           DB_SM_ID : shift/product/aurora/coredot
           REGION: ap-northeast-2
           PLAN_ID : was7u8

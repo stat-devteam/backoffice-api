@@ -30,6 +30,9 @@ const adminUserAdminUserIdProcessor = require('../processor/adminUser.adminUserI
 const adminUserProcessor = require('../processor/adminUser.js');
 const adminUserDefaultPartProcessor = require("../processor/adminUser.defaultBackofficePart.js");
 const actionLogProcessor = require("../processor/actionLog.js");
+const biStatisticsUserProcessor = require("../processor/bi.statistics.user.js");
+const biStatisticsTransferProcessor = require("../processor/bi.statistics.transfer.js");
+const biStatisticsLinkProcessor = require("../processor/bi.statistics.link.js");
 
 
 api.use(['/admin/*'], async(req, res, next) => {
@@ -145,6 +148,10 @@ api.delete('/admin/admin-user/:admin_user_id', adminUserAdminUserIdProcessor.adm
 api.get('/admin/admin-user/default-backoffice-part', adminUserDefaultPartProcessor.adminUser_defaultBackOfficePart_GET);
 // //system
 api.get('/admin/system/action_log', actionLogProcessor.actionLog_GET);
+//bi
+api.get('/admin/bi/statistics/user', biStatisticsUserProcessor.bi_statistics_user_GET);
+api.get('/admin/bi/statistics/transfer', biStatisticsTransferProcessor.bi_statistics_transfer_GET);
+api.get('/admin/bi/statistics/link', biStatisticsLinkProcessor.bi_statistics_transfer_GET);
 
 exports.handler = async(event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;

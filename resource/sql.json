@@ -393,5 +393,65 @@
         "queryString" : "SELECT COUNT(*) as total FROM klaytn_account_transfer WHERE transfer_reg_dt BETWEEN ? AND ?",
         "params" : ["start_date", "end_date"],
         "desc" : "klaytn_account_transfer_list_total"
+    },
+    "check_link": {
+        "queryString": "SELECT * FROM link WHERE mbr_id = ? AND mbr_grp_id = ?",
+        "params": ["memberId", "memberGroupId"],
+        "desc": "이미 링크 생성되어 있는지 확인"
+    },
+    "transfer_bi_statistics_user_service_group_total" : {
+        "queryString" : "SELECT SUM(t.amount) as total_amount, SUM(t.fee) as total_fee  FROM transfer t inner join link l on l.mbr_grp_id = ? AND mbr_id= ? INNER JOIN service s ON t.svc_num = s.svc_num INNER JOIN service_group sg on s.svc_grp_id = sg.svc_grp_id  WHERE sg.svc_grp_id IN (?) AND tx_status = 'success' AND type IN (?) AND transfer_reg_dt between ? and ?",
+        "params" : ["member_group_id", "mbr_id", "svc_grp_id_array","type","start_date", "end_date"],
+        "desc" : "유저별 지급 총액 조회 - service_group"
+    },
+    "transfer_bi_statistics_user_service_total" : {
+        "queryString" : "SELECT SUM(t.amount) as total_amount, SUM(t.fee) as total_fee FROM transfer t inner join link l on l.mbr_grp_id = ? AND mbr_id= ? INNER JOIN service s ON t.svc_num = s.svc_num INNER JOIN service_group sg on s.svc_grp_id = sg.svc_grp_id  WHERE t.svc_num= ? AND tx_status = 'success' AND type IN (?) AND transfer_reg_dt between ? and ?",
+        "params" : ["member_group_id", "mbr_id", "svc_grp_id_array","type","start_date", "end_date"],
+        "desc" : "유저별 지급 총액 조회 - service"
+    },
+    "transfer_bi_statistics_transfer_service_by_day" : {
+        "queryString" : "select * from transfer_stats WHERE transfer_type IN (?) AND year = ? AND month = ?",
+        "params" : ["transfer_type", "year", "month"],
+        "desc" : "전송 기록 통계 - 서비스 (day)"
+    },
+    "transfer_bi_statistics_transfer_service_by_week" : {
+        "queryString" : "select year,week,svc_num, svc_name,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? group by year,week, svc_num",
+        "params" : ["transfer_type", "year"],
+        "desc" : "전송 기록 통계 - 서비스 (week)"
+    },
+    "transfer_bi_statistics_transfer_service_by_month" : {
+         "queryString" : "select year,month,svc_num, svc_name,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? group by year,month, svc_num",
+        "params" : ["transfer_type", "year"],
+        "desc" : "전송 기록 통계 - 서비스 (month)"
+    },
+     "transfer_bi_statistics_transfer_service_group_by_day" : {
+        "queryString" : "select year,month,day,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? AND month = ? group by year, month, day, svc_grp_id",
+        "params" : ["transfer_type", "year", "month"],
+        "desc" : "전송 기록 통계 - 서비스 그룹 (day)"
+    },
+    "transfer_bi_statistics_transfer_service_group_by_week" : {
+        "queryString" : "select year,week,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? group by year,week, svc_grp_id",
+        "params" : ["transfer_type", "year"],
+        "desc" : "전송 기록 통계 - 서비스 그룹 (week)"
+    },
+    "transfer_bi_statistics_transfer_service_group_by_month" : {
+        "queryString" : "select year,month,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? group by year,month, svc_grp_id",
+        "params" : ["transfer_type", "year"],
+        "desc" : "전송 기록 통계 - 서비스 그룹 (month)"
+    },
+    "link_bi_statistics_transfer_by_day" : {
+        "queryString" : "select  year, month, day, svc_grp_id, sum(link_count) as link_count, sum(klip_new) as klip_new from link_stats WHERE year = ? AND month = ?  group by year, month, day, svc_grp_id",
+        "params" : ["year", "month"],
+        "desc" : "링크 기록 통계 - 서비스 그룹 (day)"
+    },
+    "link_bi_statistics_transfer_by_week" : {
+        "queryString" : "select year, week, svc_grp_id, sum(link_count) as link_count, sum(klip_new) as klip_new from link_stats WHERE year = ? group by year,week, svc_grp_id",
+        "params" : ["year"],
+        "desc" : "링크 기록 통계 - 서비스 그룹 (week)"
+    },
+    "link_bi_statistics_transfer_by_month" : {
+        "queryString" : "select year, month, svc_grp_id, sum(link_count) as link_count, sum(klip_new) as klip_new from link_stats WHERE year = ? group by year,month, svc_grp_id",
+        "params" : ["year"],
+        "desc" : "링크 기록 통계 - 서비스 그룹 (month)"
     }
 }

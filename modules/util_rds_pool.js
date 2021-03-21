@@ -39,4 +39,40 @@ const getConnection = async() => {
     return await pool.getConnection(async conn => conn);
 }
 
-module.exports = { initPool, getPool, getConnection }
+let connectionRoPool = null;
+
+const initRoPool = async() => {
+
+    console.log("[RDS Read Only POOL Util]", "[initPool]", 'init pool start...');
+
+    const secretValue = await smHandler.getSecretValue(process.env.DB_SM_ID);
+    console.log("[RDS Read Only  POOL Util]", "[initPool]", 'get secret value...', secretValue);
+
+    connectionRoPool = mysql.createPool({
+        host: process.env.DB_ENDPOINT,
+        user: process.env.DB_USER,
+        port: parseInt(process.env.DB_PORT),
+        database: process.env.DB_NAME,
+        password: secretValue.password,
+        connectionLimit: 1
+    });
+
+    console.log("[RDS Read Only  POOL Util]", "[initPool]", 'create pool finish...', connectionRoPool);
+
+    return connectionRoPool;
+}
+
+const getRoPool = async() => {
+    if (!connectionRoPool) {
+        connectionRoPool = await initRoPool();
+    }
+    return connectionRoPool;
+}
+
+
+const getRoConnection = async() => {
+    const pool = await getRoPool();
+    return await pool.getRoConnection(async conn => conn);
+}
+
+module.exports = { initPool, getPool, getConnection, initRoPool, getRoPool, getRoConnection }

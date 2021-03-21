@@ -400,12 +400,12 @@
         "desc": "이미 링크 생성되어 있는지 확인"
     },
     "transfer_bi_statistics_user_service_group_total" : {
-        "queryString" : "SELECT SUM(t.amount) as total_amount, SUM(t.fee) as total_fee  FROM transfer t inner join link l on l.mbr_grp_id = ? AND mbr_id= ? INNER JOIN service s ON t.svc_num = s.svc_num INNER JOIN service_group sg on s.svc_grp_id = sg.svc_grp_id  WHERE sg.svc_grp_id IN (?) AND tx_status = 'success' AND type IN (?) AND transfer_reg_dt between ? and ?",
+        "queryString" : "SELECT SUM(t.amount) as total_amount, SUM(t.fee) as total_fee  FROM transfer t inner join link l on l.link_num = t.link_num INNER JOIN service s ON t.svc_num = s.svc_num INNER JOIN service_group sg on s.svc_grp_id = sg.svc_grp_id  WHERE l.mbr_grp_id = ? AND l.mbr_id = ? AND sg.svc_grp_id IN (?) AND tx_status = 'success' AND type IN (?) AND transfer_reg_dt between ? and ?",
         "params" : ["member_group_id", "mbr_id", "svc_grp_id_array","type","start_date", "end_date"],
         "desc" : "유저별 지급 총액 조회 - service_group"
     },
     "transfer_bi_statistics_user_service_total" : {
-        "queryString" : "SELECT SUM(t.amount) as total_amount, SUM(t.fee) as total_fee FROM transfer t inner join link l on l.mbr_grp_id = ? AND mbr_id= ? INNER JOIN service s ON t.svc_num = s.svc_num INNER JOIN service_group sg on s.svc_grp_id = sg.svc_grp_id  WHERE t.svc_num= ? AND tx_status = 'success' AND type IN (?) AND transfer_reg_dt between ? and ?",
+        "queryString" : "SELECT SUM(t.amount) as total_amount, SUM(t.fee) as total_fee FROM transfer t inner join link l on l.link_num = t.link_num INNER JOIN service s ON t.svc_num = s.svc_num INNER JOIN service_group sg on s.svc_grp_id = sg.svc_grp_id  WHERE l.mbr_grp_id = ? AND l.mbr_id = ? AND  t.svc_num= ? AND tx_status = 'success' AND type IN (?) AND transfer_reg_dt between ? and ?",
         "params" : ["member_group_id", "mbr_id", "svc_grp_id_array","type","start_date", "end_date"],
         "desc" : "유저별 지급 총액 조회 - service"
     },

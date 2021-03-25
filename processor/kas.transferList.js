@@ -15,12 +15,18 @@ const kas_transferList_GET = async(req, res) => {
     const endDate = params.endDate || now;
     let pageOffset = parseInt(params.pageOffset) || 0;
     let pageSize = parseInt(params.pageSize) || 10;
+    let fromAccountId = params.fromAccountId;
+    let txStatus = params.txStatus;
+    const fromAccountIdArray = fromAccountId.split(',');
+    const txStatusArray = txStatus.split(',');
+    console.log('fromAccountIdArray', fromAccountIdArray)
+    console.log('txStatusArray', txStatusArray)
 
     try {
 
         const pool = await dbPool.getPool();
-        const [transferListResult, f1] = await pool.query(dbQuery.klaytn_account_transfer_list.queryString, [startDate, endDate, pageOffset, pageSize]);
-        const [transferTotalCountResult, f2] = await pool.query(dbQuery.klaytn_account_transfer_list_total.queryString, [startDate, endDate, pageOffset, pageSize]);
+        const [transferListResult, f1] = await pool.query(dbQuery.klaytn_account_transfer_list.queryString, [fromAccountIdArray, txStatusArray, startDate, endDate, pageOffset, pageSize]);
+        const [transferTotalCountResult, f2] = await pool.query(dbQuery.klaytn_account_transfer_list_total.queryString, [fromAccountIdArray, txStatusArray, startDate, endDate, pageOffset, pageSize]);
         return sendRes(res, 200, { result: true, list: transferListResult, totalCount: transferTotalCountResult[0].total, })
     }
     catch (err) {

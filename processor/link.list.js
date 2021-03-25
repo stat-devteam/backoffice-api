@@ -15,8 +15,11 @@ const link_list_GET = async(req, res) => {
         let pageSize = parseInt(req.query.pageSize) || 10; // optional query item, default 10
         const startDate = req.query.startDate || 0; // optional query item, default 0
         const endDate = req.query.endDate || now; // optional query item, default now
+        let serviceGroupId = req.query.serviceGroupId;
+        let memberGroupId = req.query.memberGroupId;
+        const serviceGroupIdArray = serviceGroupId.split(',');
 
-        return linkListDateRangeType(res, pageOffset, pageSize, startDate, endDate);
+        return linkListDateRangeType(res, memberGroupId, serviceGroupIdArray, pageOffset, pageSize, startDate, endDate);
     }
     else if (req.query.type === 'user') {
         if (!req.query.memberGroupId || !req.query.memberId) {
@@ -34,11 +37,11 @@ const link_list_GET = async(req, res) => {
     return sendRes(res, 400, { code: 1101, message: '[Shift] Required Pamrameter Missing : type' });
 }
 
-async function linkListDateRangeType(res, pageOffset, pageSize, startDate, endDate) {
+async function linkListDateRangeType(res, memberGroupId, serviceGroupIdArray, pageOffset, pageSize, startDate, endDate) {
     try {
         const pool = await dbPool.getPool();
-        const [linkListResult, f1] = await pool.query(dbQuery.link_get_list_date_range.queryString, [startDate, endDate, pageOffset, pageSize]);
-        const [linkTotalCountResult, f2] = await pool.query(dbQuery.link_get_total_count_date_range.queryString, [startDate, endDate]);
+        const [linkListResult, f1] = await pool.query(dbQuery.link_get_list_date_range.queryString, [memberGroupId, serviceGroupIdArray, startDate, endDate, pageOffset, pageSize]);
+        const [linkTotalCountResult, f2] = await pool.query(dbQuery.link_get_total_count_date_range.queryString, [memberGroupId, serviceGroupIdArray, startDate, endDate]);
         return sendRes(res, 200, {
             result: true,
             list: linkListResult,

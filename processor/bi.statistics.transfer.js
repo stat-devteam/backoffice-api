@@ -19,6 +19,7 @@ const bi_statistics_transfer_GET = async(req, res) => {
     const contentType = params.contentType; // service_group or service
     const year = params.year // 2020....2030
     const month = params.month // 1,2,3, ... 12
+    const serviceGroupIdsArray = params.serviceGroupIds.split(',');
 
 
     if (!dateType || !contentType) {
@@ -32,37 +33,37 @@ const bi_statistics_transfer_GET = async(req, res) => {
 
     if (contentType === 'service_group') {
         if (dateType === 'month') {
-            return serviceGroupMonthRequest(res, transferType, year)
+            return serviceGroupMonthRequest(res, transferType, year, serviceGroupIdsArray)
 
         }
         else if (dateType === 'week') {
-            return serviceGroupWeekRequest(res, transferType, year)
+            return serviceGroupWeekRequest(res, transferType, year, serviceGroupIdsArray)
 
         }
         else if (dateType === 'day') {
-            return serviceGroupDayRequest(res, transferType, year, month)
+            return serviceGroupDayRequest(res, transferType, year, month, serviceGroupIdsArray)
         }
     }
     else {
         if (dateType === 'month') {
-            return serviceMonthRequest(res, transferType, year)
+            return serviceMonthRequest(res, transferType, year, serviceGroupIdsArray)
 
         }
         else if (dateType === 'week') {
-            return serviceWeekRequest(res, transferType, year)
+            return serviceWeekRequest(res, transferType, year, serviceGroupIdsArray)
 
         }
         else if (dateType === 'day') {
-            return serviceDayRequest(res, transferType, year, month)
+            return serviceDayRequest(res, transferType, year, month, serviceGroupIdsArray)
         }
 
     }
 }
 
-async function serviceDayRequest(res, transferType, year, month) {
+async function serviceDayRequest(res, transferType, year, month, serviceGroupIdsArray) {
     try {
         const pool = await dbPool.getRoPool();
-        const [result, f1] = await pool.query(dbQuery.transfer_bi_statistics_transfer_service_by_day.queryString, [transferType, year, month]);
+        const [result, f1] = await pool.query(dbQuery.transfer_bi_statistics_transfer_service_by_day.queryString, [transferType, year, month, serviceGroupIdsArray]);
         return sendRes(res, 200, { result: true, list: result })
     }
     catch (err) {
@@ -71,10 +72,10 @@ async function serviceDayRequest(res, transferType, year, month) {
     }
 }
 
-async function serviceWeekRequest(res, transferType, year) {
+async function serviceWeekRequest(res, transferType, year, serviceGroupIdsArray) {
     try {
         const pool = await dbPool.getRoPool();
-        const [result, f1] = await pool.query(dbQuery.transfer_bi_statistics_transfer_service_by_week.queryString, [transferType, year]);
+        const [result, f1] = await pool.query(dbQuery.transfer_bi_statistics_transfer_service_by_week.queryString, [transferType, year, serviceGroupIdsArray]);
         return sendRes(res, 200, { result: true, list: result })
     }
     catch (err) {
@@ -83,10 +84,10 @@ async function serviceWeekRequest(res, transferType, year) {
     }
 }
 
-async function serviceMonthRequest(res, transferType, year) {
+async function serviceMonthRequest(res, transferType, year, serviceGroupIdsArray) {
     try {
         const pool = await dbPool.getRoPool();
-        const [result, f1] = await pool.query(dbQuery.transfer_bi_statistics_transfer_service_by_month.queryString, [transferType, year]);
+        const [result, f1] = await pool.query(dbQuery.transfer_bi_statistics_transfer_service_by_month.queryString, [transferType, year, serviceGroupIdsArray]);
         return sendRes(res, 200, { result: true, list: result })
     }
     catch (err) {
@@ -95,10 +96,10 @@ async function serviceMonthRequest(res, transferType, year) {
     }
 }
 
-async function serviceGroupDayRequest(res, transferType, year, month) {
+async function serviceGroupDayRequest(res, transferType, year, month, serviceGroupIdsArray) {
     try {
         const pool = await dbPool.getRoPool();
-        const [result, f1] = await pool.query(dbQuery.transfer_bi_statistics_transfer_service_group_by_day.queryString, [transferType, year, month]);
+        const [result, f1] = await pool.query(dbQuery.transfer_bi_statistics_transfer_service_group_by_day.queryString, [transferType, year, month, serviceGroupIdsArray]);
         return sendRes(res, 200, { result: true, list: result })
     }
     catch (err) {
@@ -107,10 +108,10 @@ async function serviceGroupDayRequest(res, transferType, year, month) {
     }
 }
 
-async function serviceGroupWeekRequest(res, transferType, year) {
+async function serviceGroupWeekRequest(res, transferType, year, serviceGroupIdsArray) {
     try {
         const pool = await dbPool.getRoPool();
-        const [result, f1] = await pool.query(dbQuery.transfer_bi_statistics_transfer_service_group_by_week.queryString, [transferType, year]);
+        const [result, f1] = await pool.query(dbQuery.transfer_bi_statistics_transfer_service_group_by_week.queryString, [transferType, year, serviceGroupIdsArray]);
         return sendRes(res, 200, { result: true, list: result })
     }
     catch (err) {
@@ -119,10 +120,10 @@ async function serviceGroupWeekRequest(res, transferType, year) {
     }
 }
 
-async function serviceGroupMonthRequest(res, transferType, year) {
+async function serviceGroupMonthRequest(res, transferType, year, serviceGroupIdsArray) {
     try {
         const pool = await dbPool.getRoPool();
-        const [result, f1] = await pool.query(dbQuery.transfer_bi_statistics_transfer_service_group_by_month.queryString, [transferType, year]);
+        const [result, f1] = await pool.query(dbQuery.transfer_bi_statistics_transfer_service_group_by_month.queryString, [transferType, year, serviceGroupIdsArray]);
         return sendRes(res, 200, { result: true, list: result })
     }
     catch (err) {

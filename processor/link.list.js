@@ -30,8 +30,10 @@ const link_list_GET = async(req, res) => {
         const memberId = req.query.memberId; // required query item
         let pageOffset = parseInt(req.query.pageOffset) || 0; // optional query item, default 0
         let pageSize = parseInt(req.query.pageSize) || 10; // optional query item, dafault 10
+        let serviceGroupId = req.query.serviceGroupId;
+        const serviceGroupIdArray = serviceGroupId.split(',');
 
-        return linkListUserType(res, memberGroupId, memberId, pageOffset, pageSize);
+        return linkListUserType(res, memberGroupId, memberId, serviceGroupIdArray, pageOffset, pageSize);
     }
 
     return sendRes(res, 400, { code: 1101, message: '[Shift] Required Pamrameter Missing : type' });
@@ -54,12 +56,12 @@ async function linkListDateRangeType(res, memberGroupId, serviceGroupIdArray, pa
     }
 }
 
-async function linkListUserType(res, memberGroupId, memberId, pageOffset, pageSize) {
+async function linkListUserType(res, memberGroupId, memberId, serviceGroupIdArray, pageOffset, pageSize) {
     try {
         const pool = await dbPool.getPool();
-        const [linkListResult, f1] = await pool.query(dbQuery.link_temp_get_list_user.queryString, [memberId, memberGroupId, pageOffset, pageSize]);
-        const [linkTotalCountResult, f2] = await pool.query(dbQuery.link_temp_get_total_count_user.queryString, [memberId, memberGroupId]);
-        const [linkInfoResult, f3] = await pool.query(dbQuery.link_get_info_user.queryString, [memberGroupId, memberId]);
+        const [linkListResult, f1] = await pool.query(dbQuery.link_temp_get_list_user.queryString, [memberId, memberGroupId, serviceGroupIdArray, pageOffset, pageSize]);
+        const [linkTotalCountResult, f2] = await pool.query(dbQuery.link_temp_get_total_count_user.queryString, [memberId, memberGroupId, serviceGroupIdArray]);
+        const [linkInfoResult, f3] = await pool.query(dbQuery.link_get_info_user.queryString, [memberGroupId, memberId, serviceGroupIdArray]);
         return sendRes(res, 200, {
             result: true,
             list: linkListResult,

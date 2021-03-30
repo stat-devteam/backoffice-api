@@ -115,7 +115,7 @@
         "desc": "transfer get total by user"
     },
     "transfer_get_list_by_user_service" : {
-        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, l.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.mbr_grp_id= ? AND l.mbr_id= ? INNER JOIN shift.service s ON t.svc_num = s.svc_num INNER JOIN shift.service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE t.link_num=l.link_num AND t.svc_num= ? AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?) ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
+        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.mbr_grp_id= ? AND l.mbr_id= ? INNER JOIN shift.service s ON t.svc_num = s.svc_num INNER JOIN shift.service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE t.link_num=l.link_num AND t.svc_num= ? AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?) ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
         "params" : ["mbr_grp_id", "mbr_id", "svc_num","start_date", "end_date", "transfer_type","page_offset", "page_size" ],
         "desc" : "transfer get list by user where svc_num"
     },
@@ -125,7 +125,7 @@
         "desc": "transfer get total by user"
     },
     "transfer_get_list_by_user_service_group" : {
-        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, l.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.mbr_grp_id=? AND l.mbr_id= ? INNER JOIN service s ON s.svc_grp_id IN (?) INNER JOIN shift.service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE t.link_num=l.link_num AND t.svc_num=s.svc_num AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?) ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
+        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.mbr_grp_id=? AND l.mbr_id= ? INNER JOIN service s ON s.svc_grp_id IN (?) INNER JOIN shift.service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE t.link_num=l.link_num AND t.svc_num=s.svc_num AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?) ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
         "params" : ["mbr_grp_id", "mbr_id", "svc_grp_id","start_date", "end_date", "transfer_type","page_offset", "page_size" ],
         "desc" : "transfer get list by user where svc_grp_id"
     },
@@ -135,7 +135,7 @@
         "desc" : "transfer get total by user where svc_grp_id"
     },
     "transfer_get_list_by_service" : {
-        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, l.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_num=t.svc_num INNER JOIN shift.service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE s.svc_num=? AND t.type IN (?) AND t.transfer_reg_dt BETWEEN ? AND ? ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
+        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_num=t.svc_num INNER JOIN shift.service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE s.svc_num=? AND t.type IN (?) AND t.transfer_reg_dt BETWEEN ? AND ? ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
         "params" : ["svc_num","transfer_type","start_date", "end_date","page_offset", "page_size" ],
         "desc" : "transfer get list by service"
     },
@@ -145,7 +145,7 @@
         "desc" : "transfer get total by service"
     },
     "transfer_get_list_by_service_group" : {
-        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, l.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_grp_id IN (?) INNER JOIN service_group sg ON sg.svc_grp_id=s.svc_grp_id WHERE t.svc_num=s.svc_num AND t.type IN (?) AND t.transfer_reg_dt BETWEEN ? AND ? ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
+        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_grp_id IN (?) INNER JOIN service_group sg ON sg.svc_grp_id=s.svc_grp_id WHERE t.svc_num=s.svc_num AND t.type IN (?) AND t.transfer_reg_dt BETWEEN ? AND ? ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
         "params" : ["svc_grp_id","transfer_type","start_date", "end_date","page_offset", "page_size" ],
         "desc" : "transfer get list by service group"
     },
@@ -195,17 +195,17 @@
        "desc" : "link get total count"
     },
     "link_get_info_user" : {
-        "queryString" : "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_grp_id = ? AND l.mbr_id = ?",
+        "queryString" : "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_grp_id = ? AND l.mbr_id = ? AND l.svc_grp_id IN (?)",
         "params" : ["mbr_grp_id", "mbr_id"],
         "desc" : "link get list"
     },
     "link_temp_get_list_user" : {
-       "queryString" : "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name FROM link_temp l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_id = ? AND l.mbr_grp_id = ? ORDER BY reg_dt DESC LIMIT ?, ?;",
+       "queryString" : "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name FROM link_temp l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_id = ? AND l.mbr_grp_id = ? AND l.svc_grp_id IN (?) ORDER BY reg_dt DESC LIMIT ?, ?;",
        "params" : ["mbr_id", "mbr_grp_id","page_offset", "page_size"],
        "desc" : "link_temp get list"
     },
     "link_temp_get_total_count_user" : {
-       "queryString" : "SELECT COUNT(*) as total FROM link_temp l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_id = ? AND l.mbr_grp_id = ?",
+       "queryString" : "SELECT COUNT(*) as total FROM link_temp l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_id = ? AND l.mbr_grp_id = ? AND l.svc_grp_id IN (?)",
        "params" : ["mbr_id", "mbr_grp_id"],
        "desc" : "link_temp get list"
     },
@@ -410,47 +410,47 @@
         "desc" : "유저별 지급 총액 조회 - service"
     },
     "transfer_bi_statistics_transfer_service_by_day" : {
-        "queryString" : "select * from transfer_stats WHERE transfer_type IN (?) AND year = ? AND month = ?",
+        "queryString" : "select * from transfer_stats WHERE transfer_type IN (?) AND year = ? AND month = ? AND svc_grp_id IN (?)",
         "params" : ["transfer_type", "year", "month"],
         "desc" : "전송 기록 통계 - 서비스 (day)"
     },
     "transfer_bi_statistics_transfer_service_by_week" : {
-        "queryString" : "select year,week,svc_num, svc_name,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? group by year,week, svc_num",
+        "queryString" : "select year,week,svc_num, svc_name,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? AND svc_grp_id IN (?) group by year,week, svc_num",
         "params" : ["transfer_type", "year"],
         "desc" : "전송 기록 통계 - 서비스 (week)"
     },
     "transfer_bi_statistics_transfer_service_by_month" : {
-         "queryString" : "select year,month,svc_num, svc_name,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? group by year,month, svc_num",
+         "queryString" : "select year,month,svc_num, svc_name,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? AND svc_grp_id IN (?) group by year,month, svc_num",
         "params" : ["transfer_type", "year"],
         "desc" : "전송 기록 통계 - 서비스 (month)"
     },
      "transfer_bi_statistics_transfer_service_group_by_day" : {
-        "queryString" : "select year,month,day,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? AND month = ? group by year, month, day, svc_grp_id",
+        "queryString" : "select year,month,day,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? AND month = ? AND svc_grp_id IN (?) group by year, month, day, svc_grp_id",
         "params" : ["transfer_type", "year", "month"],
         "desc" : "전송 기록 통계 - 서비스 그룹 (day)"
     },
     "transfer_bi_statistics_transfer_service_group_by_week" : {
-        "queryString" : "select year,week,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? group by year,week, svc_grp_id",
+        "queryString" : "select year,week,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? AND svc_grp_id IN (?) group by year,week, svc_grp_id",
         "params" : ["transfer_type", "year"],
         "desc" : "전송 기록 통계 - 서비스 그룹 (week)"
     },
     "transfer_bi_statistics_transfer_service_group_by_month" : {
-        "queryString" : "select year,month,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? group by year,month, svc_grp_id",
+        "queryString" : "select year,month,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? AND svc_grp_id IN (?) group by year,month, svc_grp_id",
         "params" : ["transfer_type", "year"],
         "desc" : "전송 기록 통계 - 서비스 그룹 (month)"
     },
     "link_bi_statistics_transfer_by_day" : {
-        "queryString" : "select  year, month, day, svc_grp_id, sum(link_count) as link_count, sum(klip_new) as klip_new from link_stats WHERE year = ? AND month = ?  group by year, month, day, svc_grp_id",
+        "queryString" : "select  year, month, day, svc_grp_id, sum(link_count) as link_count, sum(klip_new) as klip_new from link_stats WHERE year = ? AND month = ? AND svc_grp_id IN (?) group by year, month, day, svc_grp_id",
         "params" : ["year", "month"],
         "desc" : "링크 기록 통계 - 서비스 그룹 (day)"
     },
     "link_bi_statistics_transfer_by_week" : {
-        "queryString" : "select year, week, svc_grp_id, sum(link_count) as link_count, sum(klip_new) as klip_new from link_stats WHERE year = ? group by year,week, svc_grp_id",
+        "queryString" : "select year, week, svc_grp_id, sum(link_count) as link_count, sum(klip_new) as klip_new from link_stats WHERE year = ? AND svc_grp_id IN (?) group by year,week, svc_grp_id",
         "params" : ["year"],
         "desc" : "링크 기록 통계 - 서비스 그룹 (week)"
     },
     "link_bi_statistics_transfer_by_month" : {
-        "queryString" : "select year, month, svc_grp_id, sum(link_count) as link_count, sum(klip_new) as klip_new from link_stats WHERE year = ? group by year,month, svc_grp_id",
+        "queryString" : "select year, month, svc_grp_id, sum(link_count) as link_count, sum(klip_new) as klip_new from link_stats WHERE year = ? AND svc_grp_id IN (?) group by year,month, svc_grp_id",
         "params" : ["year"],
         "desc" : "링크 기록 통계 - 서비스 그룹 (month)"
     }

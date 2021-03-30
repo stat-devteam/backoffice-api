@@ -14,6 +14,7 @@ const bi_statistics_transfer_GET = async(req, res) => {
     const dateType = params.dateType; // day, week, month
     const year = params.year // 2020....2030
     const month = params.month // 1,2,3, ... 12
+    const serviceGroupIdsArray = params.serviceGroupIds.split(',');
 
 
     if (!dateType) {
@@ -25,22 +26,22 @@ const bi_statistics_transfer_GET = async(req, res) => {
     console.log('month', month)
 
     if (dateType === 'month') {
-        return serviceGroupMonthRequest(res, year)
+        return serviceGroupMonthRequest(res, year, serviceGroupIdsArray)
 
     }
     else if (dateType === 'week') {
-        return serviceGroupWeekRequest(res, year)
+        return serviceGroupWeekRequest(res, year, serviceGroupIdsArray)
 
     }
     else if (dateType === 'day') {
-        return serviceGroupDayRequest(res, year, month)
+        return serviceGroupDayRequest(res, year, month, serviceGroupIdsArray)
     }
 }
 
-async function serviceGroupDayRequest(res, year, month) {
+async function serviceGroupDayRequest(res, year, month, serviceGroupIdsArray) {
     try {
         const pool = await dbPool.getRoPool();
-        const [result, f1] = await pool.query(dbQuery.link_bi_statistics_transfer_by_day.queryString, [year, month]);
+        const [result, f1] = await pool.query(dbQuery.link_bi_statistics_transfer_by_day.queryString, [year, month, serviceGroupIdsArray]);
         return sendRes(res, 200, { result: true, list: result })
     }
     catch (err) {
@@ -49,10 +50,10 @@ async function serviceGroupDayRequest(res, year, month) {
     }
 }
 
-async function serviceGroupWeekRequest(res, year) {
+async function serviceGroupWeekRequest(res, year, serviceGroupIdsArray) {
     try {
         const pool = await dbPool.getRoPool();
-        const [result, f1] = await pool.query(dbQuery.link_bi_statistics_transfer_by_week.queryString, [year]);
+        const [result, f1] = await pool.query(dbQuery.link_bi_statistics_transfer_by_week.queryString, [year, serviceGroupIdsArray]);
         return sendRes(res, 200, { result: true, list: result })
     }
     catch (err) {
@@ -61,10 +62,10 @@ async function serviceGroupWeekRequest(res, year) {
     }
 }
 
-async function serviceGroupMonthRequest(res, year) {
+async function serviceGroupMonthRequest(res, year, serviceGroupIdsArray) {
     try {
         const pool = await dbPool.getRoPool();
-        const [result, f1] = await pool.query(dbQuery.link_bi_statistics_transfer_by_month.queryString, [year]);
+        const [result, f1] = await pool.query(dbQuery.link_bi_statistics_transfer_by_month.queryString, [year, serviceGroupIdsArray]);
         return sendRes(res, 200, { result: true, list: result })
     }
     catch (err) {

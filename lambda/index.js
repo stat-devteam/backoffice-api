@@ -154,6 +154,13 @@ api.get('/admin/bi/statistics/transfer', biStatisticsTransferProcessor.bi_statis
 api.get('/admin/bi/statistics/link', biStatisticsLinkProcessor.bi_statistics_transfer_GET);
 
 exports.handler = async(event, context, callback) => {
-    context.callbackWaitsForEmptyEventLoop = false;
-    return await api.run(event, context);
+    const type = event.type;
+    if (type === 'alive-check') {
+        console.log('[Alive-Check]')
+        return;
+    }
+    else {
+        context.callbackWaitsForEmptyEventLoop = false;
+        return await api.run(event, context);
+    }
 };

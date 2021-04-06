@@ -185,12 +185,12 @@
         "desc" : "reward get total by user where service_group"
     },
     "link_get_list_date_range" : {
-       "queryString" : "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_grp_id = ? AND l.svc_grp_id IN (?) AND l.reg_dt BETWEEN ? AND ? ORDER BY reg_dt DESC LIMIT ?, ?;",
+       "queryString" : "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.klip_new IN (?) AND l.svc_grp_id IN (?) AND l.reg_dt BETWEEN ? AND ? ORDER BY reg_dt DESC LIMIT ?, ?;",
        "params" : ["start_date", "end_date","page_offset", "page_size" ],
        "desc" : "link get list"
     },
     "link_get_total_count_date_range" : {
-       "queryString" : "SELECT COUNT(*) as total from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_grp_id = ? AND l.svc_grp_id IN (?) AND l.reg_dt BETWEEN ? AND ?",
+       "queryString" : "SELECT COUNT(*) as total from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.klip_new IN (?) AND l.svc_grp_id IN (?) AND l.reg_dt BETWEEN ? AND ?",
        "params" : [ "start_date", "end_date"],
        "desc" : "link get total count"
     },
@@ -439,18 +439,18 @@
         "params" : ["transfer_type", "year"],
         "desc" : "전송 기록 통계 - 서비스 그룹 (month)"
     },
-    "link_bi_statistics_transfer_by_day" : {
-        "queryString" : "select  year, month, day, svc_grp_id, sum(link_count) as link_count, sum(klip_new) as klip_new from link_stats WHERE year = ? AND month = ? AND svc_grp_id IN (?) group by year, month, day, svc_grp_id",
+    "link_bi_statistics_service_group_by_day" : {
+        "queryString" : "select  * from link_stats WHERE year = ? AND month = ? AND svc_grp_id IN (?) AND klip_new IN (?) group by year, month, day, svc_grp_id, klip_new",
         "params" : ["year", "month"],
         "desc" : "링크 기록 통계 - 서비스 그룹 (day)"
     },
-    "link_bi_statistics_transfer_by_week" : {
-        "queryString" : "select year, week, svc_grp_id, sum(link_count) as link_count, sum(klip_new) as klip_new from link_stats WHERE year = ? AND svc_grp_id IN (?) group by year,week, svc_grp_id",
+    "link_bi_statistics_service_group_by_week" : {
+        "queryString" : "select year, week, svc_grp_id,SUM(link_count) as link_count, klip_new from link_stats WHERE year= ? AND svc_grp_id IN (?) AND klip_new IN (?) group by year, week,svc_grp_id, klip_new",
         "params" : ["year"],
         "desc" : "링크 기록 통계 - 서비스 그룹 (week)"
     },
-    "link_bi_statistics_transfer_by_month" : {
-        "queryString" : "select year, month, svc_grp_id, sum(link_count) as link_count, sum(klip_new) as klip_new from link_stats WHERE year = ? AND svc_grp_id IN (?) group by year,month, svc_grp_id",
+    "link_bi_statistics_service_group_by_month" : {
+        "queryString" : "select year, month, svc_grp_id,SUM(link_count) as link_count, klip_new from link_stats WHERE year= ? AND svc_grp_id IN (?) AND klip_new IN (?) group by year, month,svc_grp_id, klip_new",
         "params" : ["year"],
         "desc" : "링크 기록 통계 - 서비스 그룹 (month)"
     }

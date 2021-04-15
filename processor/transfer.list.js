@@ -25,8 +25,10 @@ const transfer_list_GET = async(req, res) => {
     let pageSize = parseInt(params.pageSize) || 10;
     const optionType = params.optionType; //none, service,service_group
     const optionValue = params.optionValue;
-
-
+    let klipNew = params.klipNew;
+    const klipNewArray = klipNew.split(',');
+    console.log('transferType', transferType)
+    console.log('klipNewArray', klipNewArray)
 
     if (type === 'user') {
         if (!memberGroupId || !memberId) {
@@ -38,11 +40,11 @@ const transfer_list_GET = async(req, res) => {
         }
 
         if (optionType === 'service' && optionValue) {
-            return transferListUserOptionTypeService(res, memberGroupId, memberId, optionValue, startDate, endDate, transferType, pageOffset, pageSize);
+            return transferListUserOptionTypeService(res, memberGroupId, memberId, optionValue, startDate, endDate, transferType, klipNewArray, pageOffset, pageSize);
         }
         else if (optionType === 'service_group' && optionValue) {
             const serviceGroupIdsArray = optionValue.split(',');
-            return transferListUserOptionTypeServiceGroup(res, memberGroupId, memberId, serviceGroupIdsArray, startDate, endDate, transferType, pageOffset, pageSize);
+            return transferListUserOptionTypeServiceGroup(res, memberGroupId, memberId, serviceGroupIdsArray, startDate, endDate, transferType, klipNewArray, pageOffset, pageSize);
         }
     }
     else if (type === 'service') {
@@ -51,7 +53,7 @@ const transfer_list_GET = async(req, res) => {
         }
 
         const serviceNumber = params.serviceNumber;
-        return transferListService(res, serviceNumber, transferType, startDate, endDate, pageOffset, pageSize);
+        return transferListService(res, serviceNumber, transferType, klipNewArray, startDate, endDate, pageOffset, pageSize);
 
     }
     else if (type === 'service_group') {
@@ -61,16 +63,16 @@ const transfer_list_GET = async(req, res) => {
 
         const serviceGroupId = params.serviceGroupId;
         const serviceGroupIdsArray = serviceGroupId.split(',');
-        return transferListServiceGroup(res, serviceGroupIdsArray, transferType, startDate, endDate, pageOffset, pageSize);
+        return transferListServiceGroup(res, serviceGroupIdsArray, transferType, klipNewArray, startDate, endDate, pageOffset, pageSize);
     }
 
 }
 
-async function transferListUserOptionTypeService(res, memberGroupId, memberId, optionValue, startDate, endDate, transferType, pageOffset, pageSize) {
+async function transferListUserOptionTypeService(res, memberGroupId, memberId, optionValue, startDate, endDate, transferType, klipNewArray, pageOffset, pageSize) {
     try {
         const pool = await dbPool.getPool();
-        const [transferListResult, f1] = await pool.query(dbQuery.transfer_get_list_by_user_service.queryString, [memberGroupId, memberId, optionValue, startDate, endDate, transferType, pageOffset, pageSize]);
-        const [transferTotalCountResult, f2] = await pool.query(dbQuery.transfer_get_total_count_by_user_service.queryString, [memberGroupId, memberId, optionValue, startDate, endDate, transferType]);
+        const [transferListResult, f1] = await pool.query(dbQuery.transfer_get_list_by_user_service.queryString, [memberGroupId, memberId, optionValue, startDate, endDate, transferType, klipNewArray, pageOffset, pageSize]);
+        const [transferTotalCountResult, f2] = await pool.query(dbQuery.transfer_get_total_count_by_user_service.queryString, [memberGroupId, memberId, optionValue, startDate, endDate, transferType, klipNewArray]);
         return sendRes(res, 200, { result: true, list: transferListResult, totalCount: transferTotalCountResult[0].total, })
     }
     catch (err) {
@@ -79,11 +81,11 @@ async function transferListUserOptionTypeService(res, memberGroupId, memberId, o
     }
 }
 
-async function transferListUserOptionTypeServiceGroup(res, memberGroupId, memberId, optionValue, startDate, endDate, transferType, pageOffset, pageSize) {
+async function transferListUserOptionTypeServiceGroup(res, memberGroupId, memberId, optionValue, startDate, endDate, transferType, klipNewArray, pageOffset, pageSize) {
     try {
         const pool = await dbPool.getPool();
-        const [transferListResult, f1] = await pool.query(dbQuery.transfer_get_list_by_user_service_group.queryString, [memberGroupId, memberId, optionValue, startDate, endDate, transferType, pageOffset, pageSize]);
-        const [transferTotalCountResult, f2] = await pool.query(dbQuery.transfer_get_total_count_by_user_service_group.queryString, [memberGroupId, memberId, optionValue, startDate, endDate, transferType]);
+        const [transferListResult, f1] = await pool.query(dbQuery.transfer_get_list_by_user_service_group.queryString, [memberGroupId, memberId, optionValue, startDate, endDate, transferType, klipNewArray, pageOffset, pageSize]);
+        const [transferTotalCountResult, f2] = await pool.query(dbQuery.transfer_get_total_count_by_user_service_group.queryString, [memberGroupId, memberId, optionValue, startDate, endDate, transferType, klipNewArray]);
         return sendRes(res, 200, { result: true, list: transferListResult, totalCount: transferTotalCountResult[0].total, })
     }
     catch (err) {
@@ -92,11 +94,11 @@ async function transferListUserOptionTypeServiceGroup(res, memberGroupId, member
     }
 }
 
-async function transferListService(res, serviceNumber, transferType, startDate, endDate, pageOffset, pageSize) {
+async function transferListService(res, serviceNumber, transferType, klipNewArray, startDate, endDate, pageOffset, pageSize) {
     try {
         const pool = await dbPool.getPool();
-        const [transferListResult, f1] = await pool.query(dbQuery.transfer_get_list_by_service.queryString, [serviceNumber, transferType, startDate, endDate, pageOffset, pageSize]);
-        const [transferTotalCountResult, f2] = await pool.query(dbQuery.transfer_get_total_count_by_service.queryString, [serviceNumber, transferType, startDate, endDate]);
+        const [transferListResult, f1] = await pool.query(dbQuery.transfer_get_list_by_service.queryString, [serviceNumber, transferType, klipNewArray, startDate, endDate, pageOffset, pageSize]);
+        const [transferTotalCountResult, f2] = await pool.query(dbQuery.transfer_get_total_count_by_service.queryString, [serviceNumber, transferType, klipNewArray, startDate, endDate]);
         return sendRes(res, 200, { result: true, list: transferListResult, totalCount: transferTotalCountResult[0].total, })
     }
     catch (err) {
@@ -105,11 +107,11 @@ async function transferListService(res, serviceNumber, transferType, startDate, 
     }
 }
 
-async function transferListServiceGroup(res, serviceGroupIdsArray, transferType, startDate, endDate, pageOffset, pageSize) {
+async function transferListServiceGroup(res, serviceGroupIdsArray, transferType, klipNewArray, startDate, endDate, pageOffset, pageSize) {
     try {
         const pool = await dbPool.getPool();
-        const [transferListResult, f1] = await pool.query(dbQuery.transfer_get_list_by_service_group.queryString, [serviceGroupIdsArray, transferType, startDate, endDate, pageOffset, pageSize]);
-        const [transferTotalCountResult, f2] = await pool.query(dbQuery.transfer_get_total_count_by_service_group.queryString, [serviceGroupIdsArray, transferType, startDate, endDate]);
+        const [transferListResult, f1] = await pool.query(dbQuery.transfer_get_list_by_service_group.queryString, [serviceGroupIdsArray, transferType, klipNewArray, startDate, endDate, pageOffset, pageSize]);
+        const [transferTotalCountResult, f2] = await pool.query(dbQuery.transfer_get_total_count_by_service_group.queryString, [serviceGroupIdsArray, transferType, klipNewArray, startDate, endDate]);
         return sendRes(res, 200, { result: true, list: transferListResult, totalCount: transferTotalCountResult[0].total, })
     }
     catch (err) {

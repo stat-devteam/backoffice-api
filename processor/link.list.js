@@ -20,8 +20,9 @@ const link_list_GET = async(req, res) => {
         const serviceGroupIdArray = serviceGroupId.split(',');
         let klipNew = req.query.klipNew;
         const klipNewArray = klipNew.split(',');
+        const serviceNumber = req.query.serviceNumber;
 
-        return linkListDateRangeType(res, klipNewArray, serviceGroupIdArray, pageOffset, pageSize, startDate, endDate);
+        return linkListDateRangeType(res, klipNewArray, serviceGroupIdArray, serviceNumber, pageOffset, pageSize, startDate, endDate);
     }
     else if (req.query.type === 'user') {
         if (!req.query.memberGroupId || !req.query.memberId) {
@@ -34,23 +35,38 @@ const link_list_GET = async(req, res) => {
         let pageSize = parseInt(req.query.pageSize) || 10; // optional query item, dafault 10
         let serviceGroupId = req.query.serviceGroupId;
         const serviceGroupIdArray = serviceGroupId.split(',');
+        let klipNew = req.query.klipNew;
+        const klipNewArray = klipNew.split(',');
+        const serviceNumber = req.query.serviceNumber;
 
-        return linkListUserType(res, memberGroupId, memberId, serviceGroupIdArray, pageOffset, pageSize);
+        return linkListUserType(res, memberGroupId, memberId, serviceGroupIdArray, klipNewArray, serviceNumber, pageOffset, pageSize);
     }
 
     return sendRes(res, 400, { code: 1101, message: '[Shift] Required Pamrameter Missing : type' });
 }
 
-async function linkListDateRangeType(res, klipNewArray, serviceGroupIdArray, pageOffset, pageSize, startDate, endDate) {
+async function linkListDateRangeType(res, klipNewArray, serviceGroupIdArray, serviceNumber, pageOffset, pageSize, startDate, endDate) {
     try {
         const pool = await dbPool.getPool();
-        const [linkListResult, f1] = await pool.query(dbQuery.link_get_list_date_range.queryString, [klipNewArray, serviceGroupIdArray, startDate, endDate, pageOffset, pageSize]);
-        const [linkTotalCountResult, f2] = await pool.query(dbQuery.link_get_total_count_date_range.queryString, [klipNewArray, serviceGroupIdArray, startDate, endDate]);
-        return sendRes(res, 200, {
-            result: true,
-            list: linkListResult,
-            totalCount: linkTotalCountResult[0].total,
-        });
+        if (serviceNumber === 'none') {
+            const [linkListResult, f1] = await pool.query(dbQuery.link_get_list_date_range.queryString, [klipNewArray, serviceGroupIdArray, startDate, endDate, pageOffset, pageSize]);
+            const [linkTotalCountResult, f2] = await pool.query(dbQuery.link_get_total_count_date_range.queryString, [klipNewArray, serviceGroupIdArray, startDate, endDate]);
+            return sendRes(res, 200, {
+                result: true,
+                list: linkListResult,
+                totalCount: linkTotalCountResult[0].total,
+            });
+        }
+        else {
+            const [linkListResult, f1] = await pool.query(dbQuery.link_get_list_date_range_svc_num.queryString, [klipNewArray, serviceGroupIdArray, serviceNumber, startDate, endDate, pageOffset, pageSize]);
+            const [linkTotalCountResult, f2] = await pool.query(dbQuery.link_get_total_count_date_range_svc_num.queryString, [klipNewArray, serviceGroupIdArray, serviceNumber, startDate, endDate]);
+            return sendRes(res, 200, {
+                result: true,
+                list: linkListResult,
+                totalCount: linkTotalCountResult[0].total,
+            });
+        }
+
     }
     catch (err) {
         console.log(err);
@@ -58,18 +74,34 @@ async function linkListDateRangeType(res, klipNewArray, serviceGroupIdArray, pag
     }
 }
 
-async function linkListUserType(res, memberGroupId, memberId, serviceGroupIdArray, pageOffset, pageSize) {
+async function linkListUserType(res, memberGroupId, memberId, serviceGroupIdArray, klipNewArray, serviceNumber, pageOffset, pageSize) {
+
     try {
         const pool = await dbPool.getPool();
-        const [linkListResult, f1] = await pool.query(dbQuery.link_temp_get_list_user.queryString, [memberId, memberGroupId, serviceGroupIdArray, pageOffset, pageSize]);
-        const [linkTotalCountResult, f2] = await pool.query(dbQuery.link_temp_get_total_count_user.queryString, [memberId, memberGroupId, serviceGroupIdArray]);
-        const [linkInfoResult, f3] = await pool.query(dbQuery.link_get_info_user.queryString, [memberGroupId, memberId, serviceGroupIdArray]);
-        return sendRes(res, 200, {
-            result: true,
-            list: linkListResult,
-            totalCount: linkTotalCountResult[0].total,
-            info: linkInfoResult.length > 0 ? linkInfoResult[0] : null,
-        });
+
+        if (serviceNumber === 'none') {
+            const [linkListResult, f1] = await pool.query(dbQuery.link_temp_get_list_user.queryString, [memberId, memberGroupId, serviceGroupIdArray, pageOffset, pageSize]);
+            const [linkTotalCountResult, f2] = await pool.query(dbQuery.link_temp_get_total_count_user.queryString, [memberId, memberGroupId, serviceGroupIdArray]);
+            const [linkInfoResult, f3] = await pool.query(dbQuery.link_get_info_user.queryString, [memberGroupId, memberId, serviceGroupIdArray, klipNewArray]);
+            return sendRes(res, 200, {
+                result: true,
+                list: linkListResult,
+                totalCount: linkTotalCountResult[0].total,
+                info: linkInfoResult.length > 0 ? linkInfoResult[0] : null,
+            });
+        }
+        else {
+            const [linkListResult, f1] = await pool.query(dbQuery.link_temp_get_list_user_svc_num.queryString, [memberId, memberGroupId, serviceGroupIdArray, serviceNumber, pageOffset, pageSize]);
+            const [linkTotalCountResult, f2] = await pool.query(dbQuery.link_temp_get_total_count_user_svc_num.queryString, [memberId, memberGroupId, serviceGroupIdArray, serviceNumber]);
+            const [linkInfoResult, f3] = await pool.query(dbQuery.link_get_info_user_svc_num.queryString, [memberGroupId, memberId, serviceGroupIdArray, klipNewArray, serviceNumber]);
+            return sendRes(res, 200, {
+                result: true,
+                list: linkListResult,
+                totalCount: linkTotalCountResult[0].total,
+                info: linkInfoResult.length > 0 ? linkInfoResult[0] : null,
+            });
+        }
+
     }
     catch (err) {
         console.log(err);

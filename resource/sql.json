@@ -115,42 +115,42 @@
         "desc": "transfer get total by user"
     },
     "transfer_get_list_by_user_service" : {
-        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.mbr_grp_id= ? AND l.mbr_id= ? INNER JOIN shift.service s ON t.svc_num = s.svc_num INNER JOIN shift.service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE t.link_num=l.link_num AND t.svc_num= ? AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?) ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
+        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.mbr_grp_id= ? AND l.mbr_id= ? INNER JOIN shift.service s ON t.svc_num = s.svc_num INNER JOIN shift.service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE t.link_num=l.link_num AND t.svc_num= ? AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?) AND l.klip_new IN (?) ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
         "params" : ["mbr_grp_id", "mbr_id", "svc_num","start_date", "end_date", "transfer_type","page_offset", "page_size" ],
         "desc" : "transfer get list by user where svc_num"
     },
     "transfer_get_total_count_by_user_service" : {
-        "queryString" : "SELECT COUNT(*) as total FROM transfer t INNER JOIN link l ON l.mbr_grp_id= ? AND l.mbr_id= ? WHERE t.link_num=l.link_num AND t.svc_num= ? AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?);",
+        "queryString" : "SELECT COUNT(*) as total FROM transfer t INNER JOIN link l ON l.mbr_grp_id= ? AND l.mbr_id= ? WHERE t.link_num=l.link_num AND t.svc_num= ? AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?) AND l.klip_new IN (?)",
          "params": ["mbr_grp_id", "mbr_id","start_date", "end_date", "transfer_type"],
         "desc": "transfer get total by user"
     },
     "transfer_get_list_by_user_service_group" : {
-        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.mbr_grp_id=? AND l.mbr_id= ? INNER JOIN service s ON s.svc_grp_id IN (?) INNER JOIN shift.service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE t.link_num=l.link_num AND t.svc_num=s.svc_num AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?) ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
+        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.mbr_grp_id=? AND l.mbr_id= ? INNER JOIN service s ON s.svc_grp_id IN (?) INNER JOIN shift.service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE t.link_num=l.link_num AND t.svc_num=s.svc_num AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?) AND l.klip_new IN (?) ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
         "params" : ["mbr_grp_id", "mbr_id", "svc_grp_id","start_date", "end_date", "transfer_type","page_offset", "page_size" ],
         "desc" : "transfer get list by user where svc_grp_id"
     },
     "transfer_get_total_count_by_user_service_group" : {
-        "queryString" : "SELECT COUNT(*) as total FROM transfer t INNER JOIN link l ON l.mbr_grp_id=? AND l.mbr_id= ? INNER JOIN service s ON s.svc_grp_id IN (?)  WHERE t.link_num=l.link_num AND t.svc_num=s.svc_num AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?)",
+        "queryString" : "SELECT COUNT(*) as total FROM transfer t INNER JOIN link l ON l.mbr_grp_id=? AND l.mbr_id= ? INNER JOIN service s ON s.svc_grp_id IN (?)  WHERE t.link_num=l.link_num AND t.svc_num=s.svc_num AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?) AND l.klip_new IN (?)",
         "params" : ["mbr_grp_id", "mbr_id", "svc_grp_id","start_date", "end_date", "transfer_type" ],
         "desc" : "transfer get total by user where svc_grp_id"
     },
     "transfer_get_list_by_service" : {
-        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_num=t.svc_num INNER JOIN shift.service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE s.svc_num=? AND t.type IN (?) AND t.transfer_reg_dt BETWEEN ? AND ? ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
+        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_num=t.svc_num INNER JOIN shift.service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE s.svc_num=? AND t.type IN (?) AND l.klip_new IN (?) AND t.transfer_reg_dt BETWEEN ? AND ? ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
         "params" : ["svc_num","transfer_type","start_date", "end_date","page_offset", "page_size" ],
         "desc" : "transfer get list by service"
     },
     "transfer_get_total_count_by_service" : {
-        "queryString" : "SELECT COUNT(*) as total FROM transfer t INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_num=t.svc_num INNER JOIN shift.service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE s.svc_num=? AND t.type IN (?) AND t.transfer_reg_dt BETWEEN ? AND ?",
+        "queryString" : "SELECT COUNT(*) as total FROM transfer t INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_num=t.svc_num INNER JOIN shift.service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE s.svc_num=? AND t.type IN (?) AND l.klip_new IN (?) AND t.transfer_reg_dt BETWEEN ? AND ?",
         "params" : ["svc_num","transfer_type","start_date", "end_date" ],
         "desc" : "transfer get total by service"
     },
     "transfer_get_list_by_service_group" : {
-        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_grp_id IN (?) INNER JOIN service_group sg ON sg.svc_grp_id=s.svc_grp_id WHERE t.svc_num=s.svc_num AND t.type IN (?) AND t.transfer_reg_dt BETWEEN ? AND ? ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
+        "queryString" : "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_grp_id IN (?) INNER JOIN service_group sg ON sg.svc_grp_id=s.svc_grp_id WHERE t.svc_num=s.svc_num AND t.type IN (?) AND l.klip_new IN (?) AND t.transfer_reg_dt BETWEEN ? AND ? ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
         "params" : ["svc_grp_id","transfer_type","start_date", "end_date","page_offset", "page_size" ],
         "desc" : "transfer get list by service group"
     },
     "transfer_get_total_count_by_service_group" : {
-        "queryString" : "SELECT COUNT(*) as total FROM transfer t INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_grp_id IN (?) INNER JOIN service_group sg ON sg.svc_grp_id=s.svc_grp_id WHERE t.svc_num=s.svc_num AND t.type IN (?) AND t.transfer_reg_dt BETWEEN ? AND ?;",
+        "queryString" : "SELECT COUNT(*) as total FROM transfer t INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_grp_id IN (?) INNER JOIN service_group sg ON sg.svc_grp_id=s.svc_grp_id WHERE t.svc_num=s.svc_num AND t.type IN (?) AND l.klip_new IN (?) AND t.transfer_reg_dt BETWEEN ? AND ?;",
         "params" : ["svc_grp_id","transfer_type","start_date", "end_date" ],
         "desc" : "transfer get total by service group"
     },
@@ -194,8 +194,18 @@
        "params" : [ "start_date", "end_date"],
        "desc" : "link get total count"
     },
+    "link_get_list_date_range_svc_num" : {
+       "queryString" : "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.klip_new IN (?) AND l.svc_grp_id IN (?) AND l.svc_id = ? AND l.reg_dt BETWEEN ? AND ? ORDER BY reg_dt DESC LIMIT ?, ?;",
+       "params" : ["start_date", "end_date","page_offset", "page_size" ],
+       "desc" : "link get list - service_num"
+    },
+    "link_get_total_count_date_range_svc_num" : {
+       "queryString" : "SELECT COUNT(*) as total from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.klip_new IN (?) AND l.svc_grp_id IN (?) AND l.svc_id = ? AND l.reg_dt BETWEEN ? AND ?",
+       "params" : [ "start_date", "end_date"],
+       "desc" : "link get total count - service_num"
+    },
     "link_get_info_user" : {
-        "queryString" : "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_grp_id = ? AND l.mbr_id = ? AND l.svc_grp_id IN (?)",
+        "queryString" : "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_grp_id = ? AND l.mbr_id = ? AND l.svc_grp_id IN (?) AND l.klip_new IN (?)",
         "params" : ["mbr_grp_id", "mbr_id"],
         "desc" : "link get list"
     },
@@ -208,6 +218,21 @@
        "queryString" : "SELECT COUNT(*) as total FROM link_temp l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_id = ? AND l.mbr_grp_id = ? AND l.svc_grp_id IN (?)",
        "params" : ["mbr_id", "mbr_grp_id"],
        "desc" : "link_temp get list"
+    },
+    "link_get_info_user_svc_num" : {
+        "queryString" : "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_grp_id = ? AND l.mbr_id = ? AND l.svc_grp_id IN (?) AND l.klip_new IN (?) AND l.svc_id = ?",
+        "params" : ["mbr_grp_id", "mbr_id"],
+        "desc" : "link get list - svc_num"
+    },
+    "link_temp_get_list_user_svc_num" : {
+       "queryString" : "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name FROM link_temp l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_id = ? AND l.mbr_grp_id = ? AND l.svc_grp_id IN (?) AND l.svc_id = ? ORDER BY reg_dt DESC LIMIT ?, ?;",
+       "params" : ["mbr_id", "mbr_grp_id","page_offset", "page_size"],
+       "desc" : "link_temp get list - svc_num"
+    },
+    "link_temp_get_total_count_user_svc_num" : {
+       "queryString" : "SELECT COUNT(*) as total FROM link_temp l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_id = ? AND l.mbr_grp_id = ? AND l.svc_grp_id IN (?) AND l.svc_id = ?",
+       "params" : ["mbr_id", "mbr_grp_id"],
+       "desc" : "link_temp get list - svc_num"
     },
     "bulk_transfer_create" : {
         "queryString": "INSERT INTO bulk_transfer (svc_num, admin_id, fixed_amount, total_count, success_count, total_amount, reg_dt, reserve_dt, expire_dt, link_check, memo) VALUES (?,?,?,?,0,?,now(),?,?,?,?)",

@@ -38,6 +38,10 @@ const bi_statistics_transfer_GET = async(req, res) => {
     else if (dateType === 'day') {
         return serviceGroupDayRequest(res, year, month, serviceGroupIdArray, klipNewArray)
     }
+    else if (dateType === 'year') {
+        return serviceGroupYearRequest(res, serviceGroupIdArray, klipNewArray)
+
+    }
 }
 
 async function serviceGroupDayRequest(res, year, month, serviceGroupIdArray, klipNewArray) {
@@ -68,6 +72,18 @@ async function serviceGroupMonthRequest(res, year, serviceGroupIdArray, klipNewA
     try {
         const pool = await dbPool.getRoPool();
         const [result, f1] = await pool.query(dbQuery.link_bi_statistics_service_group_by_month.queryString, [year, serviceGroupIdArray, klipNewArray]);
+        return sendRes(res, 200, { result: true, list: result })
+    }
+    catch (err) {
+        console.log(err);
+        return sendRes(res, 400, { code: 2011, message: 'ERROR', info: err.message })
+    }
+}
+
+async function serviceGroupYearRequest(res, serviceGroupIdArray, klipNewArray) {
+    try {
+        const pool = await dbPool.getRoPool();
+        const [result, f1] = await pool.query(dbQuery.link_bi_statistics_service_group_by_year.queryString, [serviceGroupIdArray, klipNewArray]);
         return sendRes(res, 200, { result: true, list: result })
     }
     catch (err) {

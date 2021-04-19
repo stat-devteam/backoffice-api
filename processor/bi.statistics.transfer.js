@@ -43,6 +43,9 @@ const bi_statistics_transfer_GET = async(req, res) => {
         else if (dateType === 'day') {
             return serviceGroupDayRequest(res, transferType, year, month, serviceGroupIdsArray)
         }
+        else if (dateType === 'year') {
+            return serviceGroupYearRequest(res, transferType, serviceGroupIdsArray)
+        }
     }
     else {
         if (dateType === 'month') {
@@ -55,6 +58,9 @@ const bi_statistics_transfer_GET = async(req, res) => {
         }
         else if (dateType === 'day') {
             return serviceDayRequest(res, transferType, year, month, serviceGroupIdsArray)
+        }
+        else if (dateType === 'year') {
+            return serviceYearRequest(res, transferType, serviceGroupIdsArray)
         }
 
     }
@@ -96,6 +102,18 @@ async function serviceMonthRequest(res, transferType, year, serviceGroupIdsArray
     }
 }
 
+async function serviceYearRequest(res, transferType, serviceGroupIdsArray) {
+    try {
+        const pool = await dbPool.getRoPool();
+        const [result, f1] = await pool.query(dbQuery.transfer_bi_statistics_transfer_service_by_year.queryString, [transferType, serviceGroupIdsArray]);
+        return sendRes(res, 200, { result: true, list: result })
+    }
+    catch (err) {
+        console.log(err);
+        return sendRes(res, 400, { code: 2011, message: 'ERROR', info: err.message })
+    }
+}
+//service-group
 async function serviceGroupDayRequest(res, transferType, year, month, serviceGroupIdsArray) {
     try {
         const pool = await dbPool.getRoPool();
@@ -124,6 +142,18 @@ async function serviceGroupMonthRequest(res, transferType, year, serviceGroupIds
     try {
         const pool = await dbPool.getRoPool();
         const [result, f1] = await pool.query(dbQuery.transfer_bi_statistics_transfer_service_group_by_month.queryString, [transferType, year, serviceGroupIdsArray]);
+        return sendRes(res, 200, { result: true, list: result })
+    }
+    catch (err) {
+        console.log(err);
+        return sendRes(res, 400, { code: 2011, message: 'ERROR', info: err.message })
+    }
+}
+
+async function serviceGroupYearRequest(res, transferType, serviceGroupIdsArray) {
+    try {
+        const pool = await dbPool.getRoPool();
+        const [result, f1] = await pool.query(dbQuery.transfer_bi_statistics_transfer_service_group_by_year.queryString, [transferType, serviceGroupIdsArray]);
         return sendRes(res, 200, { result: true, list: result })
     }
     catch (err) {

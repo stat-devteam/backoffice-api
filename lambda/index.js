@@ -6,7 +6,6 @@ const dbPool = require('../modules/util_rds_pool.js');
 const dbQuery = require('../resource/sql.json');
 const jwt_decode = require("jwt-decode");
 const psHandler = require('../modules/util_ps.js');
-
 const testProcessor = require('../processor/test.js');
 const bulkBulkSeqProcessor = require('../processor/bulk.bulkSeq.js');
 const bulkProcessor = require('../processor/bulk.js');
@@ -16,6 +15,7 @@ const kasAccountIdProcessor = require('../processor/kas.accountId.js');
 const kasProcessor = require('../processor/kas.js');
 const kasSendProcessor = require("../processor/kas.send.js");
 const kasTransferListProcessor = require("../processor/kas.transferList.js");
+const linkProcessor = require('../processor/link.js');
 const linkListProcessor = require('../processor/link.list.js');
 const memberGroupProcessor = require('../processor/memberGroup.js');
 const rewardListProcessor = require('../processor/reward.list.js');
@@ -118,6 +118,7 @@ api.post('/admin/kas', kasProcessor.kas_POST);
 api.post('/admin/kas/send', kasSendProcessor.kas_send_POST);
 api.get('/admin/kas/transfer_list', kasTransferListProcessor.kas_transferList_GET);
 //link
+api.delete('/admin/link', linkProcessor.link_DELETE);
 api.get('/admin/link/list', linkListProcessor.link_list_GET);
 //member-group
 api.get('/admin/member-group', memberGroupProcessor.memberGroup_GET);

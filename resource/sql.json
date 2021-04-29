@@ -513,5 +513,20 @@
         "queryString" : "select year, month, svc_grp_id,SUM(link_count) as link_count, klip_new from link_stats WHERE  svc_grp_id IN (?) AND klip_new IN (?) group by year, svc_grp_id, klip_new",
         "params" : [""],
         "desc" : "링크 기록 통계 - 서비스 그룹 (year)"
+    },
+    "link_check_registered" : {
+        "queryString": "SELECT * FROM link WHERE mbr_id= ? AND mbr_grp_id=?",
+        "params": ["mbr_id", "mbr_grp_id"],
+        "desc": "link check registered"
+    },
+    "link_delete" : {
+        "queryString": "DELETE FROM link WHERE mbr_id= ? AND mbr_grp_id=?",
+        "params": ["mbr_id", "mbr_grp_id"],
+        "desc": "link delete"
+    },
+    "link_temp_delete" : {
+        "queryString": "DELETE FROM link_temp WHERE mbr_id= ? AND mbr_grp_id=?",
+        "params": ["mbr_id", "mbr_grp_id"],
+        "desc": "link_temp delete"
     }
 }

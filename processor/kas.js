@@ -16,17 +16,28 @@ const kas_GET = async(req, res) => {
     try {
         const pool = await dbPool.getPool();
 
-        if (req.query.svc_grp_id) {
-            const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_by_svc_grp_id.queryString, [req.query.svc_grp_id]);
-            return sendRes(res, 200, { result: true, list: klaytnAccountAllResult });
-        }
-        else if (req.query.balance) {
+        if (req.query.balance) {
 
             const secretValue = await smHandler.getSecretValue(process.env.SM_ID);
 
-            const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_all.queryString, []);
-            for (let i in klaytnAccountAllResult) {
-                let target = klaytnAccountAllResult[i];
+
+            let klaytnAccountResult = [];
+            const serviceGroupId = req.query.svc_grp_id;
+
+            if (serviceGroupId) {
+                const serviceGroupIdsArray = serviceGroupId.split(',');
+                const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_in_svc_grp_id.queryString, [serviceGroupIdsArray]);
+                klaytnAccountResult = klaytnAccountAllResult;
+            }
+            else {
+                const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_all.queryString, []);
+                klaytnAccountResult = klaytnAccountAllResult;
+
+            }
+
+
+            for (let i in klaytnAccountResult) {
+                let target = klaytnAccountResult[i];
                 // Get current Balance
                 const jsonRpcHeader = {
                     'x-chain-id': kasInfo.xChainId,
@@ -61,9 +72,14 @@ const kas_GET = async(req, res) => {
                 target.currentBalance = currentBalance;
             }
 
+            return sendRes(res, 200, { result: true, list: klaytnAccountResult });
+
+
+        }
+        else if (req.query.svc_grp_id) {
+            const serviceGroupIdsArray = req.query.svc_grp_id.split(',');
+            const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_in_svc_grp_id.queryString, [serviceGroupIdsArray]);
             return sendRes(res, 200, { result: true, list: klaytnAccountAllResult });
-
-
         }
         else {
             const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_all.queryString, []);

@@ -4,6 +4,11 @@
         "params": [],
         "desc": "한경 KAS 계정 GET ALL"
     },
+    "hankyung_klaytn_account_get_in_svc_grp_id" : {
+        "queryString": "SELECT * FROM hankyung_klaytn_account WHERE svc_grp_id IN (?)",
+        "params": ["svc_grp_id_array"],
+        "desc": "한경 KAS 계정 GET svc_grp_id"
+    },
      "hankyung_klaytn_account_get_by_svc_grp_id" : {
         "queryString": "SELECT * FROM hankyung_klaytn_account WHERE svc_grp_id = ?",
         "params": ["svc_grp_id"],

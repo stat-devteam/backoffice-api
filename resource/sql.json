@@ -460,7 +460,7 @@
         "desc" : "유저별 지급 총액 조회 - service"
     },
     "transfer_bi_statistics_transfer_service_by_day" : {
-        "queryString" : "select * from transfer_stats WHERE transfer_type IN (?) AND year = ? AND month = ? AND svc_grp_id IN (?)",
+        "queryString" : "select year,month,day,svc_num, svc_name,svc_grp_id, sum(transfer_count) as transfer_count, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from transfer_stats WHERE transfer_type IN (?) AND year = ? AND month = ? AND svc_grp_id IN (?) group by year, month, day, svc_num",
         "params" : ["transfer_type", "year", "month"],
         "desc" : "전송 기록 통계 - 서비스 (day)"
     },

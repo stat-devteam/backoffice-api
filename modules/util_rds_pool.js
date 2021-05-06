@@ -49,7 +49,7 @@ const initRoPool = async() => {
     console.log("[RDS Read Only  POOL Util]", "[initPool]", 'get secret value...', secretValue);
 
     connectionRoPool = mysql.createPool({
-        host: process.env.DB_ENDPOINT,
+        host: process.env.DB_RO_ENDPOINT,
         user: process.env.DB_USER,
         port: parseInt(process.env.DB_PORT),
         database: process.env.DB_NAME,

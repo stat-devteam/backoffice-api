@@ -27,6 +27,7 @@ Resources:
           DB_PORT: '3306'
           DB_USER: shift_lambda
           DB_ENDPOINT: hk-shift-real-aurora-cluster.cluster-c89v5jzuome9.ap-northeast-2.rds.amazonaws.com
+          DB_ENDPOINT: hk-shift-real-aurora-cluster.cluster-ro-c89v5jzuome9.ap-northeast-2.rds.amazonaws.com
           DB_SM_ID : shift/release/aurora/shift_lambda
           REGION: ap-northeast-2
           PLAN_ID : 0rceel

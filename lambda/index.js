@@ -33,7 +33,7 @@ const actionLogProcessor = require("../processor/actionLog.js");
 const biStatisticsUserProcessor = require("../processor/bi.statistics.user.js");
 const biStatisticsTransferProcessor = require("../processor/bi.statistics.transfer.js");
 const biStatisticsLinkProcessor = require("../processor/bi.statistics.link.js");
-
+const accountingProcessor = require("../processor/accounting.js");
 
 api.use(['/admin/*'], async(req, res, next) => {
     console.log('Maintenance - ParameterStore Check res', res);
@@ -153,6 +153,8 @@ api.get('/admin/system/action_log', actionLogProcessor.actionLog_GET);
 api.get('/admin/bi/statistics/user', biStatisticsUserProcessor.bi_statistics_user_GET);
 api.get('/admin/bi/statistics/transfer', biStatisticsTransferProcessor.bi_statistics_transfer_GET);
 api.get('/admin/bi/statistics/link', biStatisticsLinkProcessor.bi_statistics_transfer_GET);
+//accounting
+api.get('/admin/accounting', accountingProcessor.accounting_GET);
 
 exports.handler = async(event, context, callback) => {
     const type = event.type;

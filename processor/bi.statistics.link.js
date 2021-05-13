@@ -40,7 +40,6 @@ const bi_statistics_transfer_GET = async(req, res) => {
     }
     else if (dateType === 'year') {
         return serviceGroupYearRequest(res, serviceGroupIdArray, klipNewArray)
-
     }
 }
 

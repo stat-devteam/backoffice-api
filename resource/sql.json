@@ -533,5 +533,30 @@
         "queryString": "DELETE FROM link_temp WHERE mbr_id= ? AND mbr_grp_id=?",
         "params": ["mbr_id", "mbr_grp_id"],
         "desc": "link_temp delete"
+    },
+    "kas_trnasfer_get_balance" : {
+        "queryString": "select * from  kas_transfer where accnt_id = ? AND transfer_reg_dt < ? order by transfer_reg_dt desc, kas_transfer_seq desc limit 1",
+        "params": ["accnt_id", "startDate"],
+        "desc": "kas_trnasfer_get_balance 기초잔액"
+    },
+    "kas_transfer_get_last_by_date" : {
+        "queryString": "select * from kas_transfer where accnt_id = ? AND transfer_reg_dt between ? and ? order by kas_transfer_seq desc limit 1",
+        "params": ["accnt_id", "startDate", "endDate"],
+        "desc": "kas transfer list a day for excel export"
+    },
+    "accounting_stats_day" : {
+        "queryString": "select year,month,day,accnt_id,type,svc_grp_id, svc_num, svc_name, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from accounting_stats where accnt_id = ? AND year = ? AND month=? AND day=? group by year, month, day,accnt_id, type,svc_grp_id, svc_num;",
+        "params": ["accnt_id", "year", "month", "day"],
+        "desc": "accounting_stats_day"
+    },
+    "accounting_stats_month" : {
+        "queryString": "select year,month,accnt_id,type,svc_grp_id, svc_num, svc_name, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from accounting_stats where accnt_id = ? AND year = ? AND month=? group by year, month,accnt_id, type,svc_grp_id, svc_num;",
+        "params": ["accnt_id", "year", "month"],
+        "desc": "accounting_stats_day"
+    },
+    "accounting_stats_year" : {
+        "queryString": "select year,accnt_id,type,svc_grp_id, svc_num, svc_name, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from accounting_stats where accnt_id = ? AND year = ? group by year,accnt_id, type,svc_grp_id, svc_num;",
+        "params": ["accnt_id", "year"],
+        "desc": "accounting_stats_day"
     }
 }

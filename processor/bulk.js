@@ -73,7 +73,7 @@ const bulk_POST = async(req, res) => {
                 console.log('check Link')
                 let isLinked = false;
                 for (let link_index in linkListResult) {
-                    if (linkListResult[link_index].mbr_id === req.body.list[i].memberId && linkListResult[link_index].mbr_grp_id === memberGroupId) {
+                    if (linkListResult[link_index].mbr_id.toLocaleLowerCase() === req.body.list[i].memberId.toLocaleLowerCase() && linkListResult[link_index].mbr_grp_id === memberGroupId) {
                         //link check일 경우에만 memberGroupId를 확인한다.
                         isLinked = true;
                         break;

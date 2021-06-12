@@ -9,6 +9,7 @@ const dbQuery = require('../resource/sql.json');
 
 
 const bulk_POST = async(req, res) => {
+    console.log('[bulk_send]', req);
 
     if (!req.body.serviceNumber ||
         !req.body.memo ||
@@ -66,34 +67,22 @@ const bulk_POST = async(req, res) => {
         const bulkTransferSequence = createBulktransfer.insertId;
 
         let bulkValueList = [];
-        //insert RewardQue
+
         for (let i in req.body.list) {
             //checkLink
             if (checkLink) {
-                console.log('check Link')
-                let isLinked = false;
-                for (let link_index in linkListResult) {
-                    if (linkListResult[link_index].mbr_id.toLocaleLowerCase() === req.body.list[i].memberId.toLocaleLowerCase() && linkListResult[link_index].mbr_grp_id === memberGroupId) {
-                        //link check일 경우에만 memberGroupId를 확인한다.
-                        isLinked = true;
-                        break;
-                    }
-                }
+                //Insert Reward Que
+                const memberId = req.body.list[i].memberId
+                const amount = fixedAmount === '0' ? req.body.list[i].amount : fixedAmount;
+                const jobStatus = 'ready';
+                const jobFetchedDate = null;
+                const bigNumberAmount = fixedAmount === '0' ? new BigNumber(amount).multipliedBy(new BigNumber(1e+18)) : fixedAmount;
+                const klay = bigNumberAmount.toString(10);
+                const now = moment(new Date()).tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
 
-                if (isLinked) {
-                    //Insert Reward Que
-                    const memberId = req.body.list[i].memberId
-                    const amount = fixedAmount === '0' ? req.body.list[i].amount : fixedAmount;
-                    const jobStatus = 'ready';
-                    const jobFetchedDate = null;
-                    const bigNumberAmount = fixedAmount === '0' ? new BigNumber(amount).multipliedBy(new BigNumber(1e+18)) : fixedAmount;
-                    const klay = bigNumberAmount.toString(10);
-                    const now = moment(new Date()).tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
-
-                    // svc_num, mbr_id, mbr_grp_id, amount, reg_dt, reserve_dt, expire_dt, job_status, job_fetched_dt, svc_callback_seq, svc_memo_seq, bulk_seq
-                    const bulkValue = [serviceNumber, memberId, memberGroupId, klay, now, reserveTime, expireTime, jobStatus, jobFetchedDate, null, null, bulkTransferSequence];
-                    bulkValueList.push(bulkValue);
-                }
+                // svc_num, mbr_id, mbr_grp_id, amount, reg_dt, reserve_dt, expire_dt, job_status, job_fetched_dt, svc_callback_seq, svc_memo_seq, bulk_seq
+                const bulkValue = [serviceNumber, memberId, memberGroupId, klay, now, reserveTime, expireTime, jobStatus, jobFetchedDate, null, null, bulkTransferSequence];
+                bulkValueList.push(bulkValue);
             }
             else {
                 //Insert Reward Que
@@ -118,7 +107,8 @@ const bulk_POST = async(req, res) => {
 
         const [insertRewardQueResult, f5] = await pool.query(dbQuery.reward_que_insert_bulk.queryString, [bulkValueList]);
 
-        console.log('insertRewardQueResult', insertRewardQueResult)
+        console.log('insertRewardQueResult', insertRewardQueResult);
+        console.log('insert reward row count : ', insertRewardQueResult.affectedRows)
 
         return sendRes(res, 200, { result: true, bulkTransferSequence: bulkTransferSequence, rewardAffectedRows: insertRewardQueResult.affectedRows });
     }

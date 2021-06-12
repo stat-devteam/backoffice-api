@@ -9,6 +9,7 @@ const dbQuery = require('../resource/sql.json');
 const kasInfo = require('../resource/kas.json');
 
 const BigNumber = require('bignumber.js');
+const tokenUtil = require("../modules/util_token.js");
 
 
 const kas_GET = async(req, res) => {
@@ -26,11 +27,11 @@ const kas_GET = async(req, res) => {
 
             if (serviceGroupId) {
                 const serviceGroupIdsArray = serviceGroupId.split(',');
-                const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_in_svc_grp_id.queryString, [serviceGroupIdsArray]);
+                const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.klaytn_account_get_in_svc_grp_id.queryString, [serviceGroupIdsArray]);
                 klaytnAccountResult = klaytnAccountAllResult;
             }
             else {
-                const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_all.queryString, []);
+                const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.klaytn_account_get_all.queryString, []);
                 klaytnAccountResult = klaytnAccountAllResult;
 
             }
@@ -38,38 +39,16 @@ const kas_GET = async(req, res) => {
 
             for (let i in klaytnAccountResult) {
                 let target = klaytnAccountResult[i];
-                // Get current Balance
-                const jsonRpcHeader = {
-                    'x-chain-id': kasInfo.xChainId,
-                    "Content-Type": "application/json"
-                }
-                const jsonRpcAuth = {
-                    username: secretValue.kas_access_key,
-                    password: secretValue.kas_secret_access_key,
-                }
-                const jsonRpcBody = { "jsonrpc": "2.0", "method": "klay_getBalance", "params": [target.address, "latest"], "id": 1 }
+                let targetAddress = target.address;
+                const balanceData = await tokenUtil.getBalanceOf(targetAddress);
 
-                const kalynJsonRpcResponse = await axios
-                    .post(kasInfo.jsonRpcUrl, jsonRpcBody, {
-                        headers: jsonRpcHeader,
-                        auth: jsonRpcAuth
-                    })
-                    .catch((err) => {
-                        console.log('jsonrpc send fali', err);
-                        let errorBody = {
-                            code: 1023,
-                            message: '[KAS] 잔액 조회 에러',
-                        };
-                        return { error: errorBody }
-                    });
-                console.log('kalynJsonRpcResponse', kalynJsonRpcResponse);
-
-                if (kalynJsonRpcResponse.error) {
-                    return sendRes(res, 400, kalynJsonRpcResponse.error)
+                if (balanceData.result) {
+                    target.currentBalance = balanceData.balance;
                 }
-                //result 0x1212kjsdvsdfo
-                const currentBalance = kalynJsonRpcResponse.data.result ? new BigNumber(kalynJsonRpcResponse.data.result).toString(10) : null;
-                target.currentBalance = currentBalance;
+                else {
+                    return sendRes(res, 400, { result: false, code: 1023, message: '[KAS] 잔액 조회 에러 - 수신 계정', info: { code: balanceData.code, message: balanceData.message } });
+                }
+
             }
 
             return sendRes(res, 200, { result: true, list: klaytnAccountResult });
@@ -78,11 +57,11 @@ const kas_GET = async(req, res) => {
         }
         else if (req.query.svc_grp_id) {
             const serviceGroupIdsArray = req.query.svc_grp_id.split(',');
-            const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_in_svc_grp_id.queryString, [serviceGroupIdsArray]);
+            const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.klaytn_account_get_in_svc_grp_id.queryString, [serviceGroupIdsArray]);
             return sendRes(res, 200, { result: true, list: klaytnAccountAllResult });
         }
         else {
-            const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_get_all.queryString, []);
+            const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.klaytn_account_get_all.queryString, []);
             return sendRes(res, 200, { result: true, list: klaytnAccountAllResult });
         }
 
@@ -133,7 +112,7 @@ const kas_POST = async(req, res) => {
 
     try {
         const pool = await dbPool.getPool();
-        const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.hankyung_klaytn_account_create.queryString, [req.body.accountId, req.body.name, address, req.body.serviceGroupId]);
+        const [klaytnAccountAllResult, f1] = await pool.query(dbQuery.klaytn_account_create.queryString, [req.body.accountId, req.body.name, address, req.body.serviceGroupId]);
 
         return sendRes(res, 200, { result: true });
     }

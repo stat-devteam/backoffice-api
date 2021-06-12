@@ -37,7 +37,7 @@ const serviceGroup_GET = async(req, res) => {
 }
 
 const serviceGroup_POST = async(req, res) => {
-
+    console.log('serviceGroup_POST', serviceGroup_POST)
     if (!req.body.name || !req.body.serviceGroupId) {
         return sendRes(res, 400, { code: 3000, message: '요청 파라미터 확인' })
     }
@@ -51,7 +51,7 @@ const serviceGroup_POST = async(req, res) => {
         enabled: true
         //value : 'api key' <== 필요하면 직접 지정해줄 수도 있다.
     };
-
+    console.log('try createApiKeyParams', createApiKeyParams)
     let createApiKeyResult = await new Promise((resolve, reject) => {
         apigateway.createApiKey(createApiKeyParams, function(err, data) {
             if (err) return ({ error: err });

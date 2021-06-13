@@ -11,6 +11,7 @@ const kasInfo = require('../resource/kas.json');
 
 const BigNumber = require('bignumber.js');
 const { DelegatedCheck } = require('../modules/util_klaytn.js');
+const tokenUtil = require("../modules/util_token.js");
 
 
 const kas_send_POST = async(req, res) => {
@@ -36,75 +37,28 @@ const kas_send_POST = async(req, res) => {
         const pebAmount = new BigNumber(amount).multipliedBy(new BigNumber(1e+18)).toString(10);
 
         //[Task] check Balance
-        const jsonRpcHeader = {
-            'x-chain-id': kasInfo.xChainId,
-            "Content-Type": "application/json"
-        }
-        const jsonRpcAuth = {
-            username: secretValue.kas_access_key,
-            password: secretValue.kas_secret_access_key,
-        }
 
         //발신 계정
-        const fromJsonRpcBody = { "jsonrpc": "2.0", "method": "klay_getBalance", "params": [from_address, "latest"], "id": 1 }
+        const fromBalanceData = await tokenUtil.getBalanceOf(from_address);
 
-        const fromKalynJsonRpcResponse = await axios
-            .post(kasInfo.jsonRpcUrl, fromJsonRpcBody, {
-                headers: jsonRpcHeader,
-                auth: jsonRpcAuth
-            })
-            .catch((err) => {
-                console.log('jsonrpc send fali', err);
-                let errorBody = {
-                    code: 1023,
-                    message: '[KAS] 잔액 조회 에러 - 발신 계정',
-                };
-                return { error: errorBody }
-            });
-        console.log('fromKalynJsonRpcResponse', fromKalynJsonRpcResponse);
+        if (fromBalanceData.result) {}
+        else {
+            return sendRes(res, 400, { result: false, code: 1023, message: '[KAS] 잔액 조회 에러 - 발신 계정', info: { code: fromBalanceData.code, message: fromBalanceData.message } });
 
-        if (fromKalynJsonRpcResponse.error) {
-            return sendRes(res, 400, fromKalynJsonRpcResponse.error)
         }
-        if (fromKalynJsonRpcResponse.data.error) {
-            return sendRes(res, 400, {
-                code: 1023,
-                message: '[발신 계정- 잔액 조회 에러] ' + fromKalynJsonRpcResponse.data.error.message
-            });
-        }
-        //result 0x1212kjsdvsdfo
-        const from_balance = fromKalynJsonRpcResponse.data.result ? new BigNumber(fromKalynJsonRpcResponse.data.result).toString(10) : null;
+
+        const from_balance = fromBalanceData.balance;
 
 
         // 수신 계정
-        const toJsonRpcBody = { "jsonrpc": "2.0", "method": "klay_getBalance", "params": [to_address, "latest"], "id": 1 }
+        const toBalanceData = await tokenUtil.getBalanceOf(to_address);
 
-        const toKalynJsonRpcResponse = await axios
-            .post(kasInfo.jsonRpcUrl, toJsonRpcBody, {
-                headers: jsonRpcHeader,
-                auth: jsonRpcAuth
-            })
-            .catch((err) => {
-                console.log('jsonrpc send fali', err);
-                let errorBody = {
-                    code: 1023,
-                    message: '[KAS] 잔액 조회 에러 - 수신 계정',
-                };
-                return { error: errorBody }
-            });
-        console.log('toKalynJsonRpcResponse', toKalynJsonRpcResponse);
+        if (toBalanceData.result) {}
+        else {
+            return sendRes(res, 400, { result: false, code: 1023, message: '[KAS] 잔액 조회 에러 - 수신 계정', info: { code: toBalanceData.code, message: toBalanceData.message } });
+        }
 
-        if (toKalynJsonRpcResponse.error) {
-            return sendRes(res, 400, toKalynJsonRpcResponse.error)
-        }
-        if (toKalynJsonRpcResponse.data.error) {
-            return sendRes(res, 400, {
-                code: 1023,
-                message: '[수신 계정 - 잔액 조회 에러] ' + toKalynJsonRpcResponse.data.error.message
-            });
-        }
-        //result 0x1212kjsdvsdfo
-        const to_balance = toKalynJsonRpcResponse.data.result ? new BigNumber(toKalynJsonRpcResponse.data.result).toString(10) : null;
+        const to_balance = toBalanceData.balance;
 
 
         //[TASK] insert befroe submit transfer row
@@ -115,57 +69,28 @@ const kas_send_POST = async(req, res) => {
         const transferSeq = insertResult.insertId;
         console.log('[SQL] transferSeq', transferSeq);
 
-        //send klay
-        const bigNumberAmount = new BigNumber(amount).multipliedBy(new BigNumber(1e+18));
-        const hexAmount = '0x' + bigNumberAmount.toString(16);
-        console.log('hexAmount', hexAmount)
+        const sendResult = await tokenUtil.sendToken(from_address, to_address, amount);
+        console.log('sendResult', sendResult);
 
-        const axiosHeader = {
-            'Authorization': secretValue.kas_authorization,
-            'x-krn': secretValue.kas_x_krn,
-            'Content-Type': 'application/json',
-            'x-chain-id': kasInfo.xChainId,
-        };
+        if (sendResult.result) {
 
-        const sendBody = {
-            from: from_address,
-            value: hexAmount,
-            to: to_address,
-            memo: memo || 'memo',
-            nonce: 0,
-            gas: 0,
-            submit: true,
-        };
-        console.log('[KAS] sendBody', sendBody)
-
-        const sendResponse = await axios
-            .post(kasInfo.apiUrl + 'tx/fd/value', sendBody, {
-                headers: axiosHeader,
-            })
-            .catch((err) => {
-                return { error: err.response }
-            });
-
-        if (sendResponse.error) {
-            let code = sendResponse.error.data.code;
-            let message = sendResponse.error.data.message;
-
+        }
+        else {
             let errorBody = {
                 code: 2002,
                 message: '[KAS] 클레이 전송 실패',
-                info: '[' + code + '] ' + message
             }
-            console.log('[400] - (2002) 클레이 전송 실패');
-            console.log('[SEND KLAY ERROR]', sendResponse.error);
-            console.log('[code]', code)
-            console.log('[message]', message)
-            const [updateResult, f1] = await pool.query(dbQuery.klaytn_account_transfer_update_status.queryString, ['fail', transferSeq]);
+
+            const [updateResult, f11] = await pool.query(dbQuery.klaytn_account_transfer_update_status.queryString, ['fail', transferSeq]);
             return sendRes(res, 400, errorBody)
         }
 
-        const sendResponseData = sendResponse.data;
+
+        //testing 
+
+        const sendResponseData = sendResult.data;
         const txHash = sendResponseData.transactionHash;
-        console.log('[KAS] sendResponse', sendResponse);
+        console.log('[KAS] sendResponseData', sendResponseData);
         console.log('[KAS] txHash', sendResponseData.transactionHash);
 
         //[TASK] POLL Transaction check
@@ -179,7 +104,7 @@ const kas_send_POST = async(req, res) => {
         const pollFn = () => {
             return axios.get(satusCheckUrl, { headers: checkHeader });
         };
-        const pollTimeout = 5000;
+        const pollTimeout = 20000;
         const pollInteval = 300;
 
         let updateTxStatus = null;

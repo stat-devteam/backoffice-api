@@ -35,11 +35,21 @@ const adminUser_adminUserId_GET = async(req, res) => {
         else {
             serviceGorupList = adminServiceGroupAuthDetailResult[0].auth_list.split(',');
         }
-        const [serviceListResult, f5] = await pool.query(dbQuery.service_list_by_group_ids.queryString, [serviceGorupList]);
-        console.log('serviceListResult', serviceListResult)
+        let serviceList = [];
+
+        //페이지 처음 구성할때는 서비스그룹, 서비스 없음.
+        if (serviceGorupList.length === 0) {
+            console.log('no serviceGroup, service')
+        }
+        else {
+            const [serviceListResult, f5] = await pool.query(dbQuery.service_list_by_group_ids.queryString, [serviceGorupList]);
+            console.log('serviceListResult', serviceListResult)
+            serviceList = serviceListResult
+        }
 
 
-        if (adminUserDetailResult.length === 0 || adminBackofficePartAuthDetailResult.length === 0 || adminServiceGroupAuthDetailResult.length === 0 || serviceListResult.length === 0) {
+
+        if (adminUserDetailResult.length === 0 || adminBackofficePartAuthDetailResult.length === 0 || adminServiceGroupAuthDetailResult.length === 0) {
             return sendRes(res, 400, { result: false });
         }
 
@@ -48,7 +58,7 @@ const adminUser_adminUserId_GET = async(req, res) => {
             userInfo: adminUserDetailResult[0],
             backofficePartAuth: adminBackofficePartAuthDetailResult,
             serviceGroupAuth: adminServiceGroupAuthDetailResult[0],
-            serviceListAuth: serviceListResult,
+            serviceListAuth: serviceList,
         })
     }
     catch (err) {

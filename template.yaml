@@ -29,5 +29,6 @@ Resources:
           REGION: ap-northeast-2
           PLAN_ID : 7p5oq9
           SM_ID : stat-dev-kas-sm
-          COGNITO_USER_POOL_ID : ap-northeast-2_FkC6uTaVh
+          COGNITO_USER_POOL_ID : ap-northeast-2_acnFJYiRF
           PARAMETER_STORE_VALUE : 'dev_maintenance'
+          KAS_xChainId : 1001

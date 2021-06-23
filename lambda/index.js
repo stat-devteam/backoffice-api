@@ -34,6 +34,7 @@ const biStatisticsUserProcessor = require("../processor/bi.statistics.user.js");
 const biStatisticsTransferProcessor = require("../processor/bi.statistics.transfer.js");
 const biStatisticsLinkProcessor = require("../processor/bi.statistics.link.js");
 const accountingProcessor = require("../processor/accounting.js");
+const nftListProcessor = require("../processor/nft.list.js");
 
 api.use(['/admin/*'], async(req, res, next) => {
     console.log('Maintenance - ParameterStore Check res', res);
@@ -155,6 +156,8 @@ api.get('/admin/bi/statistics/transfer', biStatisticsTransferProcessor.bi_statis
 api.get('/admin/bi/statistics/link', biStatisticsLinkProcessor.bi_statistics_transfer_GET);
 //accounting
 api.get('/admin/accounting', accountingProcessor.accounting_GET);
+//nft
+api.get('/admin/nft/list', nftListProcessor.nft_list_GET);
 
 exports.handler = async(event, context, callback) => {
     const type = event.type;

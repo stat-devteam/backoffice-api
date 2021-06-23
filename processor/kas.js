@@ -13,7 +13,7 @@ const tokenUtil = require("../modules/util_token.js");
 
 
 const kas_GET = async(req, res) => {
-
+    console.log('kas_GET', req);
     try {
         const pool = await dbPool.getPool();
 
@@ -84,7 +84,7 @@ const kas_POST = async(req, res) => {
         'Authorization': secretValue.kas_authorization,
         'x-krn': secretValue.kas_x_krn,
         'Content-Type': 'application/json',
-        'x-chain-id': kasInfo.xChainId,
+        'x-chain-id': process.env.KAS_xChainId,
     };
 
     const createKasAddressResponse = await axios

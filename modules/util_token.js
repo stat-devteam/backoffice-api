@@ -8,6 +8,7 @@ const BigNumber = require('bignumber.js');
 const getBalanceOf = async(fromAddress) => {
     console.log('[token-util] getBalanceOf');
     console.log('param fromAddress', fromAddress);
+    console.log('process.env.KAS_xChainId', process.env.KAS_xChainId)
     const secretValue = await smHandler.getSecretValue(process.env.SM_ID);
 
 
@@ -25,7 +26,7 @@ const getBalanceOf = async(fromAddress) => {
     const axiosHeader = {
         'Authorization': secretValue.kas_authorization,
         'Content-Type': 'application/json',
-        'x-chain-id': kasInfo.xChainId,
+        'x-chain-id': process.env.KAS_xChainId,
     };
 
     const sendBody = {
@@ -87,7 +88,7 @@ const sendToken = async(fromAddress, toAddress, amount) => {
     const axiosHeader = {
         'Authorization': secretValue.kas_authorization,
         'Content-Type': 'application/json',
-        'x-chain-id': kasInfo.xChainId,
+        'x-chain-id': process.env.KAS_xChainId,
         'x-krn': secretValue.kas_x_krn
     };
     console.log('axiosHeader', axiosHeader)

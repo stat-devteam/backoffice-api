@@ -210,7 +210,7 @@
         "desc": "reward get total by user where service_group"
     },
     "link_get_list_date_range": {
-        "queryString": "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.klip_new IN (?) AND l.svc_grp_id IN (?) AND l.reg_dt BETWEEN ? AND ? ORDER BY reg_dt DESC LIMIT ?, ?;",
+        "queryString": "SELECT l.link_num as link_num, l.mbr_grp_id as mbr_grp_id, cast(l.mbr_id as char) as mbr_id,l.klip_address as klip_address, l.klip_new as klip_new, l.reg_dt as reg_dt , s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.klip_new IN (?) AND l.svc_grp_id IN (?) AND l.reg_dt BETWEEN ? AND ? ORDER BY reg_dt DESC LIMIT ?, ?;",
         "params": ["start_date", "end_date", "page_offset", "page_size"],
         "desc": "link get list"
     },
@@ -220,7 +220,7 @@
         "desc": "link get total count"
     },
     "link_get_list_date_range_svc_num": {
-        "queryString": "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.klip_new IN (?) AND l.svc_grp_id IN (?) AND l.svc_id = ? AND l.reg_dt BETWEEN ? AND ? ORDER BY reg_dt DESC LIMIT ?, ?;",
+        "queryString": "SELECT l.link_num as link_num, l.mbr_grp_id as mbr_grp_id, cast(l.mbr_id as char) as mbr_id,l.klip_address as klip_address, l.klip_new as klip_new, l.reg_dt as reg_dt, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.klip_new IN (?) AND l.svc_grp_id IN (?) AND l.svc_id = ? AND l.reg_dt BETWEEN ? AND ? ORDER BY l.reg_dt DESC LIMIT ?, ?;",
         "params": ["start_date", "end_date", "page_offset", "page_size"],
         "desc": "link get list - service_num"
     },
@@ -230,12 +230,12 @@
         "desc": "link get total count - service_num"
     },
     "link_get_info_user": {
-        "queryString": "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_grp_id = ? AND l.mbr_id = ? AND l.svc_grp_id IN (?) AND l.klip_new IN (?)",
+        "queryString": "SELECT l.link_num as link_num, l.mbr_grp_id as mbr_grp_id, cast(l.mbr_id as char) as mbr_id,l.klip_address as klip_address, l.klip_new as klip_new, l.reg_dt as reg_dt, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_grp_id = ? AND l.mbr_id = ? AND l.svc_grp_id IN (?) AND l.klip_new IN (?)",
         "params": ["mbr_grp_id", "mbr_id"],
         "desc": "link get list"
     },
     "link_temp_get_list_user": {
-        "queryString": "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name FROM link_temp l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_id = ? AND l.mbr_grp_id = ? AND l.svc_grp_id IN (?) ORDER BY reg_dt DESC LIMIT ?, ?;",
+        "queryString": "SELECT l.link_temp_seq as link_temp_seq, l.mbr_grp_id as mbr_grp_id, cast(l.mbr_id as char) as mbr_id,l.klip_address as klip_address, l.link_status as link_status, l.reg_dt as reg_dt, l.klip_req_expire_dt as klip_req_expire_dt,  s.name as svc_name, s.description as svc_desc, sg.name as sg_name FROM link_temp l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_id = ? AND l.mbr_grp_id = ? AND l.svc_grp_id IN (?) ORDER BY l.reg_dt DESC LIMIT ?, ?;",
         "params": ["mbr_id", "mbr_grp_id", "page_offset", "page_size"],
         "desc": "link_temp get list"
     },
@@ -245,12 +245,12 @@
         "desc": "link_temp get list"
     },
     "link_get_info_user_svc_num": {
-        "queryString": "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_grp_id = ? AND l.mbr_id = ? AND l.svc_grp_id IN (?) AND l.klip_new IN (?) AND l.svc_id = ?",
+        "queryString": "SELECT l.link_num as link_num, l.mbr_grp_id as mbr_grp_id, cast(l.mbr_id as char) as mbr_id,l.klip_address as klip_address, l.klip_new as klip_new, l.reg_dt as reg_dt, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_grp_id = ? AND l.mbr_id = ? AND l.svc_grp_id IN (?) AND l.klip_new IN (?) AND l.svc_id = ?",
         "params": ["mbr_grp_id", "mbr_id"],
         "desc": "link get list - svc_num"
     },
     "link_temp_get_list_user_svc_num": {
-        "queryString": "SELECT l.*, s.name as svc_name, s.description as svc_desc, sg.name as sg_name FROM link_temp l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_id = ? AND l.mbr_grp_id = ? AND l.svc_grp_id IN (?) AND l.svc_id = ? ORDER BY reg_dt DESC LIMIT ?, ?;",
+        "queryString": "SELECT l.link_num as link_num, l.mbr_grp_id as mbr_grp_id, cast(l.mbr_id as char) as mbr_id,l.klip_address as klip_address, l.klip_new as klip_new, l.reg_dt as reg_dt, s.name as svc_name, s.description as svc_desc, sg.name as sg_name FROM link_temp l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_id = ? AND l.mbr_grp_id = ? AND l.svc_grp_id IN (?) AND l.svc_id = ? ORDER BY l.reg_dt DESC LIMIT ?, ?;",
         "params": ["mbr_id", "mbr_grp_id", "page_offset", "page_size"],
         "desc": "link_temp get list - svc_num"
     },
@@ -558,5 +558,65 @@
         "queryString": "select year,accnt_id,type,svc_grp_id, svc_num, svc_name, sum(amount_sum) as amount_sum, sum(fee_sum) as fee_sum from accounting_stats where accnt_id = ? AND year = ? group by year,accnt_id, type,svc_grp_id, svc_num;",
         "params": ["accnt_id", "year"],
         "desc": "accounting_stats_day"
+    },
+    "nft_list_by_date": {
+        "queryString": "select n.nft_seq, n.name, n.description, n.tx_status, n.tx_hash, n.job_status, n.job_fetched_dt, n.link_num, cast(n.mbr_id as char) as mbr_id, n.to_address, cast(n.trader_id as char) as trader_id, n.klip_img_url, n.s3_img_url,n.effect_dt, n.expire_dt, n.tx_reg_dt, n.tx_end_dt, n.svc_memo_seq as svc_memo_seq, n.log_seq as log_seq, el.*, sm.* from nft n left join error_log el on n.log_seq = el.log_seq left join svc_memo sm on n.svc_memo_seq = sm.svc_memo_seq where n.tx_reg_dt BETWEEN ? AND ? order by n.nft_seq  desc limit ?, ?",
+        "params": ["start_date", "end_date", "page_offset", "page_size"],
+        "desc": "nft_list_by_date"
+    },
+    "nft_list_count_by_date": {
+        "queryString": "select count(*) as count from nft n where n.tx_reg_dt BETWEEN ? AND ?",
+        "params": ["start_date", "end_date"],
+        "desc": "nft_list_count_by_date"
+    },
+    "nft_list_summary_by_date": {
+        "queryString": "select tx_status,count(*) as count from nft n where n.tx_reg_dt BETWEEN ? AND ? group by tx_status",
+        "params": ["start_date", "end_date"],
+        "desc": "nft_list_summary_by_date"
+    },
+    "nft_list_by_date_member": {
+        "queryString": "select n.nft_seq, n.name, n.description, n.tx_status, n.tx_hash, n.job_status, n.job_fetched_dt, n.link_num, cast(n.mbr_id as char) as mbr_id, n.to_address, cast(n.trader_id as char) as trader_id, n.klip_img_url, n.s3_img_url,n.effect_dt, n.expire_dt, n.tx_reg_dt, n.tx_end_dt, n.svc_memo_seq as svc_memo_seq, n.log_seq as log_seq, el.*, sm.* from nft n left join error_log el on n.log_seq = el.log_seq left join svc_memo sm on n.svc_memo_seq = sm.svc_memo_seq where n.tx_reg_dt BETWEEN ? AND ? AND n.link_num=(select link_num from link l where l.mbr_id = ? and l.mbr_grp_id =?) order by n.nft_seq  desc limit ?, ?",
+        "params": ["start_date", "end_date", "mbr_id", "mbr_grp_id", "page_offset", "page_size"],
+        "desc": "nft_list_by_date_member"
+    },
+    "nft_list_count_by_date_member": {
+        "queryString": "select count(*) as count from nft n where n.tx_reg_dt BETWEEN ? AND ? AND n.link_num=(select link_num from link l where l.mbr_id = ? and l.mbr_grp_id =?)",
+        "params": ["start_date", "end_date", "mbr_id", "mbr_grp_id"],
+        "desc": "nft_list_count_by_date_member"
+    },
+    "nft_list_summary_by_date_member": {
+        "queryString": "select tx_status,count(*) as count from nft n where n.tx_reg_dt BETWEEN ? AND ? AND n.link_num=(select link_num from link l where l.mbr_id = ? and l.mbr_grp_id =?) group by tx_status",
+        "params": ["start_date", "end_date", "mbr_id", "mbr_grp_id"],
+        "desc": "nft_list_summary_by_date_member"
+    },
+    "nft_list_by_date_trader": {
+        "queryString": "select n.nft_seq, n.name, n.description, n.tx_status, n.tx_hash, n.job_status, n.job_fetched_dt, n.link_num, cast(n.mbr_id as char) as mbr_id, n.to_address, cast(n.trader_id as char) as trader_id, n.klip_img_url, n.s3_img_url,n.effect_dt, n.expire_dt, n.tx_reg_dt, n.tx_end_dt, n.svc_memo_seq as svc_memo_seq, n.log_seq as log_seq, el.*, sm.* from nft n left join error_log el on n.log_seq = el.log_seq left join svc_memo sm on n.svc_memo_seq = sm.svc_memo_seq where n.tx_reg_dt BETWEEN ? AND ? AND n.trader_id = ? order by n.nft_seq  desc limit ?, ?",
+        "params": ["start_date", "end_date", "trader_id", "page_offset", "page_size"],
+        "desc": "nft_list_by_date_trader"
+    },
+    "nft_list_count_by_date_trader": {
+        "queryString": "select count(*) as count from nft n where n.tx_reg_dt BETWEEN ? AND ? AND n.trader_id = ?",
+        "params": ["start_date", "end_date", "trader_id"],
+        "desc": "nft_list_count_by_date_trader"
+    },
+    "nft_list_summary_by_date_trader": {
+        "queryString": "select tx_status,count(*) as count from nft n where n.tx_reg_dt BETWEEN ? AND ? AND n.trader_id = ? group by tx_status",
+        "params": ["start_date", "end_date", "trader_id"],
+        "desc": "nft_list_summary_by_date_trader"
+    },
+    "nft_list_by_date_member_trader": {
+        "queryString": "select n.nft_seq, n.name, n.description, n.tx_status, n.tx_hash, n.job_status, n.job_fetched_dt, n.link_num, cast(n.mbr_id as char) as mbr_id, n.to_address, cast(n.trader_id as char) as trader_id, n.klip_img_url, n.s3_img_url,n.effect_dt, n.expire_dt, n.tx_reg_dt, n.tx_end_dt, n.svc_memo_seq as svc_memo_seq, n.log_seq as log_seq, el.*, sm.* from nft n left join error_log el on n.log_seq = el.log_seq left join svc_memo sm on n.svc_memo_seq = sm.svc_memo_seq where n.tx_reg_dt BETWEEN ? AND ? AND n.trader_id = ? AND n.link_num=(select link_num from link l where l.mbr_id = ? and l.mbr_grp_id =?) order by n.nft_seq  desc limit ?, ?",
+        "params": ["start_date", "end_date", "trader_id", "mbr_id", "mbr_grp_id", "page_offset", "page_size"],
+        "desc": "nft_list_by_date_trader"
+    },
+    "nft_list_count_by_date_member_trader": {
+        "queryString": "select count(*) as count from nft n where n.tx_reg_dt BETWEEN ? AND ? AND n.trader_id = ? AND n.link_num=(select link_num from link l where l.mbr_id = ? and l.mbr_grp_id =?)",
+        "params": ["start_date", "end_date", "trader_id", "mbr_id", "mbr_grp_id"],
+        "desc": "nft_list_count_by_date_trader"
+    },
+    "nft_list_summary_by_date_member_trader": {
+        "queryString": "select tx_status,count(*) as count from nft n where n.tx_reg_dt BETWEEN ? AND ? AND n.trader_id = ? AND n.link_num=(select link_num from link l where l.mbr_id = ? and l.mbr_grp_id =?) group by tx_status",
+        "params": ["start_date", "end_date", "trader_id", "mbr_id", "mbr_grp_id"],
+        "desc": "nft_list_summary_by_date_trader"
     }
 }

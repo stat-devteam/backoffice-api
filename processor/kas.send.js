@@ -98,7 +98,7 @@ const kas_send_POST = async(req, res) => {
         const checkHeader = {
             'Authorization': secretValue.kas_authorization,
             'Content-Type': 'application/json',
-            'x-chain-id': kasInfo.xChainId,
+            'x-chain-id': process.env.KAS_xChainId,
         };
 
         const pollFn = () => {

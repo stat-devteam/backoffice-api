@@ -50,7 +50,11 @@ async function linkListDateRangeType(res, klipNewArray, serviceGroupIdArray, ser
         const pool = await dbPool.getPool();
         if (serviceNumber === 'none') {
             const [linkListResult, f1] = await pool.query(dbQuery.link_get_list_date_range.queryString, [klipNewArray, serviceGroupIdArray, startDate, endDate, pageOffset, pageSize]);
+            console.log('linkListResult', linkListResult);
+
             const [linkTotalCountResult, f2] = await pool.query(dbQuery.link_get_total_count_date_range.queryString, [klipNewArray, serviceGroupIdArray, startDate, endDate]);
+            console.log('linkTotalCountResult', linkTotalCountResult);
+
             return sendRes(res, 200, {
                 result: true,
                 list: linkListResult,

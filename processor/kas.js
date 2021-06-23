@@ -73,6 +73,7 @@ const kas_GET = async(req, res) => {
 }
 
 const kas_POST = async(req, res) => {
+    console.log('kas_POST', req)
     if (!req.body.accountId || !req.body.name || !req.body.serviceGroupId) {
         return sendRes(res, 400, { code: 3000, message: '요청 파라미터 확인' })
     }

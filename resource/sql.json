@@ -618,5 +618,30 @@
         "queryString": "select tx_status,count(*) as count from nft n where n.tx_reg_dt BETWEEN ? AND ? AND n.trader_id = ? AND n.link_num=(select link_num from link l where l.mbr_id = ? and l.mbr_grp_id =?) group by tx_status",
         "params": ["start_date", "end_date", "trader_id", "mbr_id", "mbr_grp_id"],
         "desc": "nft_list_summary_by_date_trader"
+    },
+    "nft_get_by_nfe_seq": {
+        "queryString": "select n.*, cast(n.mbr_id as char)  mbr_id, cast(n.trader_id as char)  trader_id, sm.*, el.* from nft n inner join svc_memo sm on n.svc_memo_seq = sm.svc_memo_seq inner join error_log el on n.log_seq = el.log_seq  where nft_seq = ?",
+        "params": ["nft_seq"],
+        "desc": "nft 상세 조회"
+    },
+    "nft_bi_statistics_by_day": {
+        "queryString": "select  *, sum(nft_count) as nft_count, cast(trader_id as char) trader_id from nft_stats WHERE year = ? AND month = ? group by year, month, day, trader_id",
+        "params": ["year", "month"],
+        "desc": "NFT 기록 통계 day"
+    },
+    "nft_bi_statistics_by_week": {
+        "queryString": "select  *, sum(nft_count) as nft_count, cast(trader_id as char) trader_id from nft_stats WHERE year = ? group by year, week, trader_id",
+        "params": ["year"],
+        "desc": "NFT 기록 통계 week"
+    },
+    "nft_bi_statistics_by_month": {
+        "queryString": "select  *, sum(nft_count) as nft_count, cast(trader_id as char) trader_id from nft_stats WHERE year = ? group by year, month, trader_id",
+        "params": ["year"],
+        "desc": "NFT 기록 통계 month"
+    },
+    "nft_bi_statistics_by_year": {
+        "queryString": "select  *, sum(nft_count) as nft_count, cast(trader_id as char) trader_id from nft_stats group by year, trader_id",
+        "params": ["year"],
+        "desc": "NFT 기록 통계 year"
     }
 }

@@ -33,8 +33,11 @@ const actionLogProcessor = require("../processor/actionLog.js");
 const biStatisticsUserProcessor = require("../processor/bi.statistics.user.js");
 const biStatisticsTransferProcessor = require("../processor/bi.statistics.transfer.js");
 const biStatisticsLinkProcessor = require("../processor/bi.statistics.link.js");
+const biStatisticsNftProcessor = require("../processor/bi.statistics.nft.js");
 const accountingProcessor = require("../processor/accounting.js");
 const nftListProcessor = require("../processor/nft.list.js");
+const nftNftSeqProcessor = require("../processor/nft.nftSeq.js");
+
 
 api.use(['/admin/*'], async(req, res, next) => {
     console.log('Maintenance - ParameterStore Check res', res);
@@ -153,11 +156,14 @@ api.get('/admin/system/action_log', actionLogProcessor.actionLog_GET);
 //bi
 api.get('/admin/bi/statistics/user', biStatisticsUserProcessor.bi_statistics_user_GET);
 api.get('/admin/bi/statistics/transfer', biStatisticsTransferProcessor.bi_statistics_transfer_GET);
-api.get('/admin/bi/statistics/link', biStatisticsLinkProcessor.bi_statistics_transfer_GET);
+api.get('/admin/bi/statistics/link', biStatisticsLinkProcessor.bi_statistics_link_GET);
+api.get('/admin/bi/statistics/nft', biStatisticsNftProcessor.bi_statistics_nft_GET);
 //accounting
 api.get('/admin/accounting', accountingProcessor.accounting_GET);
 //nft
 api.get('/admin/nft/list', nftListProcessor.nft_list_GET);
+api.get('/admin/nft/:nft_seq', nftNftSeqProcessor.nft_nftSeq_GET);
+
 
 exports.handler = async(event, context, callback) => {
     const type = event.type;

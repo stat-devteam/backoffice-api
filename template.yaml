@@ -32,3 +32,4 @@ Resources:
           COGNITO_USER_POOL_ID : ap-northeast-2_acnFJYiRF
           PARAMETER_STORE_VALUE : 'dev_maintenance'
           KAS_xChainId : 1001
+          TOKEN_CONTRANCT_ADDRESS : '0xc1446f4e7115f18862b02818e0a1ae58da6e5f50'

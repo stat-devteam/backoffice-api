@@ -10,6 +10,7 @@ const kasInfo = require('../resource/kas.json');
 
 const BigNumber = require('bignumber.js');
 const tokenUtil = require("../modules/util_token.js");
+const klayHandler = require('../modules/util_klay.js');
 
 
 const kas_GET = async(req, res) => {
@@ -40,7 +41,7 @@ const kas_GET = async(req, res) => {
             for (let i in klaytnAccountResult) {
                 let target = klaytnAccountResult[i];
                 let targetAddress = target.address;
-                const balanceData = await tokenUtil.getBalanceOf(targetAddress);
+                const balanceData = await klayHandler.getBalanceOf(targetAddress);
 
                 if (balanceData.result) {
                     target.currentBalance = balanceData.balance;

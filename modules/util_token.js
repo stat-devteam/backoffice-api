@@ -5,6 +5,8 @@ const kasInfo = require('../resource/kas.json');
 const tokenInfo = require("../resource/token.json");
 const BigNumber = require('bignumber.js');
 
+
+
 const getBalanceOf = async(fromAddress) => {
     console.log('[token-util] getBalanceOf');
     console.log('param fromAddress', fromAddress);

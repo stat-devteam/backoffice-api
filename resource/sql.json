@@ -120,7 +120,7 @@
         "desc": "transfer get total by user"
     },
     "transfer_get_list_by_user_service": {
-        "queryString": "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.mbr_grp_id= ? AND l.mbr_id= ? INNER JOIN service s ON t.svc_num = s.svc_num INNER JOIN service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE t.link_num=l.link_num AND t.svc_num= ? AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?) AND l.klip_new IN (?) ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
+        "queryString": "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, cast(l.mbr_id as char) as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.mbr_grp_id= ? AND l.mbr_id= ? INNER JOIN service s ON t.svc_num = s.svc_num INNER JOIN service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE t.link_num=l.link_num AND t.svc_num= ? AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?) AND l.klip_new IN (?) ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
         "params": ["mbr_grp_id", "mbr_id", "svc_num", "start_date", "end_date", "transfer_type", "klip_new", "page_offset", "page_size"],
         "desc": "transfer get list by user where svc_num"
     },
@@ -135,7 +135,7 @@
         "desc": "transfer get summary by user"
     },
     "transfer_get_list_by_user_service_group": {
-        "queryString": "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.mbr_grp_id=? AND l.mbr_id= ? INNER JOIN service s ON s.svc_grp_id IN (?) INNER JOIN service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE t.link_num=l.link_num AND t.svc_num=s.svc_num AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?) AND l.klip_new IN (?) ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
+        "queryString": "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, cast(l.mbr_id as char) as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.mbr_grp_id=? AND l.mbr_id= ? INNER JOIN service s ON s.svc_grp_id IN (?) INNER JOIN service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE t.link_num=l.link_num AND t.svc_num=s.svc_num AND t.transfer_reg_dt BETWEEN ? AND ? AND t.type IN (?) AND l.klip_new IN (?) ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
         "params": ["mbr_grp_id", "mbr_id", "svc_grp_id", "start_date", "end_date", "transfer_type", "klip_new", "page_offset", "page_size"],
         "desc": "transfer get list by user where svc_grp_id"
     },
@@ -150,7 +150,7 @@
         "desc": "transfer get summary by user where svc_grp_id"
     },
     "transfer_get_list_by_service": {
-        "queryString": "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_num=t.svc_num INNER JOIN service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE s.svc_num=? AND t.type IN (?) AND l.klip_new IN (?) AND t.transfer_reg_dt BETWEEN ? AND ? ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
+        "queryString": "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, cast(l.mbr_id as char) as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_num=t.svc_num INNER JOIN service_group sg ON sg.svc_grp_id = s.svc_grp_id WHERE s.svc_num=? AND t.type IN (?) AND l.klip_new IN (?) AND t.transfer_reg_dt BETWEEN ? AND ? ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
         "params": ["svc_num", "transfer_type", "klip_new", "start_date", "end_date", "page_offset", "page_size"],
         "desc": "transfer get list by service"
     },
@@ -165,7 +165,7 @@
         "desc": "transfer get summary by service"
     },
     "transfer_get_list_by_service_group": {
-        "queryString": "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, l.mbr_id as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_grp_id IN (?) INNER JOIN service_group sg ON sg.svc_grp_id=s.svc_grp_id WHERE t.svc_num=s.svc_num AND t.type IN (?) AND l.klip_new IN (?) AND t.transfer_reg_dt BETWEEN ? AND ? ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
+        "queryString": "SELECT t.*, s.name as svc_name, s.description as svc_desc,sg.name as svc_grp_name, el.type as log_type, el.code as log_code, el.message as log_message, cast(l.mbr_id as char) as mbr_id, t.klip_address as klip_address FROM transfer t LEFT OUTER JOIN error_log el on t.log_seq = el.log_seq INNER JOIN link l ON l.link_num=t.link_num INNER JOIN service s ON s.svc_grp_id IN (?) INNER JOIN service_group sg ON sg.svc_grp_id=s.svc_grp_id WHERE t.svc_num=s.svc_num AND t.type IN (?) AND l.klip_new IN (?) AND t.transfer_reg_dt BETWEEN ? AND ? ORDER BY t.transfer_reg_dt DESC LIMIT ?, ?;",
         "params": ["svc_grp_id", "transfer_type", "klip_new", "start_date", "end_date", "page_offset", "page_size"],
         "desc": "transfer get list by service group"
     },
@@ -265,7 +265,7 @@
         "desc": "bulk_transfer 생성"
     },
     "link_get_all_where_in": {
-        "queryString": "SELECT * FROM link WHERE mbr_id IN (?)",
+        "queryString": "SELECT *, cast(mbr_id as char) as mbr_id FROM link WHERE mbr_id IN (?)",
         "params": ["mbr_id"],
         "desc": "member list에서 mbr_grp_id check하기 위한 쿼리"
     },

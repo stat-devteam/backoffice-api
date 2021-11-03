@@ -5,6 +5,8 @@ const kasInfo = require('../resource/kas.json');
 const tokenInfo = require("../resource/token.json");
 const BigNumber = require('bignumber.js');
 
+
+
 const getBalanceOf = async(fromAddress) => {
     console.log('[token-util] getBalanceOf');
     console.log('param fromAddress', fromAddress);
@@ -12,7 +14,7 @@ const getBalanceOf = async(fromAddress) => {
     const secretValue = await smHandler.getSecretValue(process.env.SM_ID);
 
 
-    const contract_address = tokenInfo.contractAddress;
+    const contract_address = process.env.TOKEN_CONTRANCT_ADDRESS;
     const api_detail_address = tokenInfo.callUrl;
     const contract_data = {
         "methodName": "balanceOf",
@@ -82,7 +84,7 @@ const sendToken = async(fromAddress, toAddress, amount) => {
     console.log('amountSolValue', amountSolValue)
 
     const intputSol = tokenInfo.transferMethodId + toSolValue + amountSolValue;
-    const contract_address = tokenInfo.contractAddress;
+    const contract_address = process.env.TOKEN_CONTRANCT_ADDRESS;
     const api_detail_address = tokenInfo.executeUrl;
 
     const axiosHeader = {

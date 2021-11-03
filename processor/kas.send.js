@@ -12,6 +12,7 @@ const kasInfo = require('../resource/kas.json');
 const BigNumber = require('bignumber.js');
 const { DelegatedCheck } = require('../modules/util_klaytn.js');
 const tokenUtil = require("../modules/util_token.js");
+const klayHandler = require('../modules/util_klay.js');
 
 
 const kas_send_POST = async(req, res) => {
@@ -39,7 +40,7 @@ const kas_send_POST = async(req, res) => {
         //[Task] check Balance
 
         //발신 계정
-        const fromBalanceData = await tokenUtil.getBalanceOf(from_address);
+        const fromBalanceData = await klayHandler.getBalanceOf(from_address);
 
         if (fromBalanceData.result) {}
         else {
@@ -51,7 +52,7 @@ const kas_send_POST = async(req, res) => {
 
 
         // 수신 계정
-        const toBalanceData = await tokenUtil.getBalanceOf(to_address);
+        const toBalanceData = await klayHandler.getBalanceOf(to_address);
 
         if (toBalanceData.result) {}
         else {
@@ -69,7 +70,7 @@ const kas_send_POST = async(req, res) => {
         const transferSeq = insertResult.insertId;
         console.log('[SQL] transferSeq', transferSeq);
 
-        const sendResult = await tokenUtil.sendToken(from_address, to_address, amount);
+        const sendResult = await klayHandler.sendToken(from_address, to_address, amount);
         console.log('sendResult', sendResult);
 
         if (sendResult.result) {

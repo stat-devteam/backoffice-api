@@ -9,6 +9,7 @@ const smHandler = require('../modules/util_sm.js');
 const dbQuery = require('../resource/sql.json');
 const kasInfo = require('../resource/kas.json');
 const tokenUtil = require("../modules/util_token.js");
+const klayHandler = require('../modules/util_klay.js');
 
 const kas_accountId_GET = async(req, res) => {
 
@@ -29,7 +30,7 @@ const kas_accountId_GET = async(req, res) => {
         return sendRes(res, 400, { code: 2011, message: 'ERROR', info: err.message })
     }
 
-    const balanceData = await tokenUtil.getBalanceOf(accountObject.address);
+    const balanceData = await klayHandler.getBalanceOf(accountObject.address);
 
     if (balanceData.result) {
         accountObject.currentBalance = balanceData.balance;

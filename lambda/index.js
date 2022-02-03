@@ -37,6 +37,14 @@ const biStatisticsNftProcessor = require("../processor/bi.statistics.nft.js");
 const accountingProcessor = require("../processor/accounting.js");
 const nftListProcessor = require("../processor/nft.list.js");
 const nftNftSeqProcessor = require("../processor/nft.nftSeq.js");
+// nft toekn (new)
+const nftTokenListProcessor = require("../processor/nftToken.list.js");
+// publisher (new)
+const publisherListProcessor = require("../processor/publisher.list.js");
+const publisherGetProcessor = require("../processor/publisher.get.js");
+const publisherTokenListProcessor = require("../processor/publisher.token.list.js");
+// fee stat (new)
+const feeStatListProcessor = require("../processor/fee.stat.list.js");
 
 
 api.use(['/admin/*'], async(req, res, next) => {
@@ -163,7 +171,14 @@ api.get('/admin/accounting', accountingProcessor.accounting_GET);
 //nft
 api.get('/admin/nft/list', nftListProcessor.nft_list_GET);
 api.get('/admin/nft/:nft_seq', nftNftSeqProcessor.nft_nftSeq_GET);
-
+//nft token (new)
+api.get('/admin/nft-token/list', nftTokenListProcessor.nftToken_list_GET);
+// publisher (new)
+api.get('/admin/publihser/list', publisherListProcessor.publisher_list_GET);
+api.get('/admin/publihser/:publisher_seq', publisherGetProcessor.publisher_GET);
+api.get('/admin/publihser/:publisher_seq/nft-token', publisherTokenListProcessor.publisher_token_list_GET);
+// fee stat (new)
+api.get('/admin/fee/stat', feeStatListProcessor.fee_stat_list_GET);
 
 exports.handler = async(event, context, callback) => {
     const type = event.type;

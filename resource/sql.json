@@ -643,5 +643,86 @@
         "queryString": "select  *, sum(nft_count) as nft_count, cast(trader_id as char) trader_id from nft_stats group by year, trader_id",
         "params": ["year"],
         "desc": "NFT 기록 통계 year"
+    },
+    "nftToken_list_by_date": {
+        "queryString": "select nt.id, nt.name, nt.description, nt.token_id, nt.token_uri, nt.owner, nt.`attributes`, nt.created_at, l.mbr_grp_id, cast(l.mbr_id as char) as mbr_id, tp.name as trader_name, cast(l2.mbr_id as char) as trader_id from nft_token nt left join link l on l.klip_address = nt.owner left join trader_publisher tp on tp.id = nt.publisher_id left join link l2 on l2.link_num = tp.link_num where nt.created_at BETWEEN ? AND ? order by nt.id desc limit ?, ?",
+        "params": ["start_date", "end_date", "page_offset", "page_size"],
+        "desc": "nftToken_list_by_date"
+    },
+    "nftToken_list_count_by_date": {
+        "queryString": "select count(*) as `count` from nft_token nt where nt.created_at BETWEEN ? AND ?",
+        "params": ["start_date", "end_date"],
+        "desc": "nftToken_list_count_by_date"
+    },
+    "nftToken_list_by_date_member": {
+        "queryString": "select nt.id, nt.name, nt.description, nt.token_id, nt.token_uri, nt.owner, nt.`attributes`, nt.created_at, l.mbr_grp_id, cast(l.mbr_id as char) as mbr_id, tp.name as trader_name, cast(l2.mbr_id as char) as trader_id from nft_token nt left join link l on l.klip_address = nt.owner left join trader_publisher tp on tp.id = nt.publisher_id left join link l2 on l2.link_num = tp.link_num where nt.created_at BETWEEN ? AND ? and l.mbr_id = ? and l.mbr_grp_id = ? order by nt.id desc limit ?, ?",
+        "params": ["start_date", "end_date", "mbr_id", "mbr_grp_id", "page_offset", "page_size"],
+        "desc": "nftToken_list_by_date_member"
+    },
+    "nftToken_list_count_by_date_member": {
+        "queryString": "select count(*) as `count` from nft_token nt left join link l on l.klip_address = nt.owner where nt.created_at BETWEEN ? AND ? and l.mbr_id = ? and l.mbr_grp_id = ?",
+        "params": ["start_date", "end_date", "mbr_id", "mbr_grp_id"],
+        "desc": "nftToken_list_count_by_date_member"
+    },
+    "nftToken_list_by_date_trader": {
+        "queryString": "select nt.id, nt.name, nt.description, nt.token_id, nt.token_uri, nt.owner, nt.`attributes`, nt.created_at, l.mbr_grp_id, cast(l.mbr_id as char) as mbr_id, tp.name as trader_name, cast(l2.mbr_id as char) as trader_id from nft_token nt left join link l on l.klip_address = nt.owner left join trader_publisher tp on tp.id = nt.publisher_id left join link l2 on l2.link_num = tp.link_num where nt.created_at BETWEEN ? AND ? and l2.mbr_id = ? and l2.mbr_grp_id = ? order by nt.id desc limit ?, ?",
+        "params": ["start_date", "end_date", "trader_id", "mbr_grp_id", "page_offset", "page_size"],
+        "desc": "nftToken_list_by_date_trader"
+    },
+    "nftToken_list_count_by_date_trader": {
+        "queryString": "select count(*) as `count` from nft_token nt left join trader_publisher tp on tp.id = nt.publisher_id left join link l2 on l2.link_num = tp.link_num where nt.created_at BETWEEN ? AND ? and l2.mbr_id = ? and l2.mbr_grp_id = ?",
+        "params": ["start_date", "end_date", "trader_id", "mbr_grp_id"],
+        "desc": "nftToken_list_count_by_date_trader"
+    },
+    "publisher_list_by_date": {
+        "queryString": "select tp.*, l.mbr_grp_id, cast(l.mbr_id as char) as mbr_id, l.klip_address as trader_address from trader_publisher tp left join link l on l.link_num = tp.link_num where tp.created_at BETWEEN ? AND ? order by tp.id desc limit ?, ?",
+        "params": ["start_date", "end_date", "page_offset", "page_size"],
+        "desc": "publisher_list_by_date"
+    },
+    "publisher_list_count_by_date": {
+        "queryString": "select count(*) as `count` from trader_publisher tp where tp.created_at BETWEEN ? AND ?",
+        "params": ["start_date", "end_date"],
+        "desc": "publisher_list_count_by_date"
+    },
+    "publisher_list_by_date_member": {
+        "queryString": "select tp.*, l.mbr_grp_id, cast(l.mbr_id as char) as mbr_id, l.klip_address as trader_address from trader_publisher tp left join link l on l.link_num = tp.link_num where tp.created_at BETWEEN ? AND ? and l.mbr_id = ? and l.mbr_grp_id = ? order by tp.id desc limit ?, ?",
+        "params": ["start_date", "end_date", "mbr_id", "mbr_grp_id", "page_offset", "page_size"],
+        "desc": "publisher_list_by_date_member"
+    },
+    "publisher_list_count_by_date_member": {
+        "queryString": "select count(*) as `count` from trader_publisher tp left join link l on l.link_num = tp.link_num where tp.created_at BETWEEN ? AND ? and l.mbr_id = ? and l.mbr_grp_id = ?",
+        "params": ["start_date", "end_date", "mbr_id", "mbr_grp_id"],
+        "desc": "publisher_list_count_by_date_member"
+    },
+    "publisher_get_by_seq": {
+        "queryString": "select tp.id, tp.type, tp.status, tp.period, tp.title, tp.description, tp.nft_image, tp.now_publisher, tp.sales, tp.max_publisher, tp.starting_price, tp.bidding_price, tp.direct_price, l.mbr_grp_id, cast(l.mbr_id as char) as mbr_id, tp.name as trader_name, l.klip_address as trader_address from trader_publisher tp left join link l on l.link_num = tp.link_num where tp.id = ?",
+        "params": ["publisher_seq"],
+        "desc": "publisher_get_by_seq"
+    },
+    "publisher_get_token_by_seq": {
+        "queryString": "select nt.id, nt.name, nt.description, nt.token_id, nt.token_uri, nt.owner, nt.`attributes`, nt.created_at, nt.market_type, nt.buyer, nt.bidder, nt.starting_price, nt.bidding_price, nt.ending_price, nt.starting_at, nt.expired_at, l.mbr_grp_id, cast(l.mbr_id as char) as mbr_id from nft_token nt left join link l on l.klip_address = nt.owner left join trader_publisher tp on tp.id = nt.publisher_id where tp.id = ? order by nt.id desc limit ?, ?",
+        "params": ["publisher_seq", "page_offset", "page_size"],
+        "desc": "publisher_get_token_by_seq"
+    },
+    "publisher_get_token_count_by_seq": {
+        "queryString": "select count(*) as `count` from nft_token nt left join link l on l.klip_address = nt.owner left join trader_publisher tp on tp.id = nt.publisher_id where tp.id = ?",
+        "params": ["publisher_seq"],
+        "desc": "publisher_get_token_count_by_seq"
+    },
+    "fee_stat_by_date": {
+        "queryString": "select fs.* from fee_stats fs where fs.created_at BETWEEN ? AND ? order by fs.id desc limit ?, ?",
+        "params": ["start_date", "end_date", "page_offset", "page_size"],
+        "desc": "fee_stat_by_date"
+    },
+    "fee_stat_count_by_date": {
+        "queryString": "select count(*) as `count` from fee_stats fs where fs.created_at BETWEEN ? AND ?",
+        "params": ["start_date", "end_date"],
+        "desc": "fee_stat_count_by_date"
+    },
+    "fee_stat_summary_by_date": {
+        "queryString": "select sum(fs.amount) as total_amount, sum(fs.stat_fee) as total_market_fee, sum(fs.seller_fee) as total_seller_fee, sum(fs.partner_fee) as total_partner_fee from fee_stats fs where fs.created_at BETWEEN ? AND ?",
+        "params": ["start_date", "end_date"],
+        "desc": "fee_stat_summary_by_date"
     }
+    
 }

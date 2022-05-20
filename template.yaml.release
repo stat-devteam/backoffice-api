@@ -38,4 +38,4 @@ Resources:
           PARAMETER_STORE_VALUE : 'release_maintenance'
           KAS_xChainId : 8217
           NFT_CARD_INFO : 'https://openapi.bloomingbit.io/stat/nft-card-info'
-          TOKEN_CONTRANCT_ADDRESS : '0x01987adc61782639ea3b8497e030b13a4510cfbe'
+          TOKEN_CONTRANCT_ADDRESS : '0x96E423d5CF07BBD8E13A1ceE4fE390dcD4b3fb6B'

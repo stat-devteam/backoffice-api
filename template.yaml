@@ -29,7 +29,10 @@ Resources:
           REGION: ap-northeast-2
           PLAN_ID : 7p5oq9
           SM_ID : stat-dev-kas-sm
+          SNS_PUBLISH_ARN : 'arn:aws:sns:ap-northeast-2:151057464517:trader-dev-publisher'
+          SNS_CANCEL_ARN : 'arn:aws:sns:ap-northeast-2:151057464517:trader-dev-cancel'
           COGNITO_USER_POOL_ID : ap-northeast-2_acnFJYiRF
           PARAMETER_STORE_VALUE : 'dev_maintenance'
           KAS_xChainId : 1001
+          NFT_CARD_INFO : 'https://dev-openapi.bloomingbit.io/stat/nft-card-info'
           TOKEN_CONTRANCT_ADDRESS : '0xc1446f4e7115f18862b02818e0a1ae58da6e5f50'

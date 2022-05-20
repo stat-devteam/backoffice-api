@@ -45,7 +45,11 @@ const publisherGetProcessor = require("../processor/publisher.get.js");
 const publisherTokenListProcessor = require("../processor/publisher.token.list.js");
 // fee stat (new)
 const feeStatListProcessor = require("../processor/fee.stat.list.js");
-
+// trader nft (new)
+const traderNftGetProcessor = require("../processor/trader.nft.get.js");
+const traderNftListGetProcessor = require("../processor/trader.nft.list.js");
+const traderNftPostProcessor = require("../processor/trader.nft.post.js");
+const traderNftDeleteProcessor = require("../processor/trader.nft.delete.js");
 
 api.use(['/admin/*'], async(req, res, next) => {
     console.log('Maintenance - ParameterStore Check res', res);
@@ -179,6 +183,11 @@ api.get('/admin/publihser/:publisher_seq', publisherGetProcessor.publisher_GET);
 api.get('/admin/publihser/:publisher_seq/nft-token', publisherTokenListProcessor.publisher_token_list_GET);
 // fee stat (new)
 api.get('/admin/fee/stat', feeStatListProcessor.fee_stat_list_GET);
+// trader nft (new)
+api.get('/admin/trader/nft', traderNftGetProcessor.trader_nft_GET);
+api.get('/admin/trader/nft/list', traderNftListGetProcessor.trader_nft_list_GET);
+api.post('/admin/trader/nft', traderNftPostProcessor.trader_nft_POST);
+api.get('/admin/trader/nft/cancel', traderNftDeleteProcessor.trader_nft_DELETE);
 
 exports.handler = async(event, context, callback) => {
     const type = event.type;

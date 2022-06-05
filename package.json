@@ -17,6 +17,8 @@
     "jwt-decode": "^3.1.2",
     "lambda-api": "^0.10.6",
     "moment-timezone": "^0.5.32",
-    "mysql2": "^2.2.5"
+    "mysql2": "^2.2.5",
+    "form-data": "^4.0.0",
+    "parse-multipart": "^1.0.4"
   }
 }

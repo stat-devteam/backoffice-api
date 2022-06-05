@@ -730,7 +730,7 @@
         "desc": "trader_sales_sum"
     },
     "trader_publish_check": {
-        "queryString": "select COUNT(*) as cnt from trader_publisher tp where tp.link_num = ? and tp.status = 'OnSale'",
+        "queryString": "select COUNT(*) as cnt from trader_publisher tp where tp.link_num = ? and (tp.status = 'OnSale' or tp.status = 'Reservation')",
         "params": ["link_no"],
         "desc": "trader_publish_check"
     },
@@ -740,9 +740,29 @@
         "desc": "service callback insert with ready status"
     },
     "trader_publish_insert": {
-        "queryString": "INSERT INTO stat.trader_publisher (type, title, description, nft_image, nft_video, max_publisher, starting_price, direct_price, updated_at, created_at, link_num, period, name, company, svc_publish_callback_seq) VALUES(?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP(6),CURRENT_TIMESTAMP(6),?,?,?,?,?)",
-        "params": ["type", "title", "description", "nft_image", "nft_video", "max_publisher", "starting_price", "direct_price", "link_num", "period", "name", "company", "svc_callback_seq"],
+        "queryString": "INSERT INTO stat.trader_publisher (type, title, description, nft_image, nft_video, max_publisher, starting_price, direct_price, updated_at, created_at, link_num, period, name, company, svc_publish_callback_seq, open_at, user_address, amount, start_number) VALUES(?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP(6),CURRENT_TIMESTAMP(6),?,?,?,?,?,?,?,?,?)",
+        "params": ["type", "title", "description", "nft_image", "nft_video", "max_publisher", "starting_price", "direct_price", "link_num", "period", "name", "company", "svc_callback_seq", "open_at", "user_address", "amount", "start_number"],
         "desc": "trader_publish_insert"
+    },
+    "trader_publish_direct_insert": {
+        "queryString": "INSERT INTO stat.trader_publisher (type, title, description, nft_image, nft_video, max_publisher, updated_at, created_at, link_num, name, company, svc_publish_callback_seq, user_address, amount, start_number) VALUES(?,?,?,?,?,?,CURRENT_TIMESTAMP(6),CURRENT_TIMESTAMP(6),?,?,?,?,?,?,?)",
+        "params": ["type", "title", "description", "nft_image", "nft_video", "max_publisher", "link_num", "name", "company", "svc_callback_seq", "user_address", "amount", "start_number"],
+        "desc": "trader_publish_insert"
+    },
+    "trader_publish_direct_update": {
+        "queryString": "UPDATE stat.trader_publisher SET title = ?, description = ?, nft_image = ?, nft_video = ?, max_publisher = ?, starting_price = ?, direct_price = ?, updated_at = CURRENT_TIMESTAMP(6), name = ?, company = ?, svc_publish_callback_seq = ?, user_address = ?, amount = ?, start_number = ? WHERE id = ?",
+        "params": ["title", "description", "nft_image", "nft_video", "max_publisher", "starting_price", "direct_price", "name", "company", "svc_callback_seq", "user_address", "amount", "start_number", "id"],
+        "desc": "trader_publish_direct_update"
+    },
+    "trader_publish_direct_get": {
+        "queryString": "select * from trader_publisher tp where tp.link_num = ? and tp.type = 'Direct'",
+        "params": ["link_no"],
+        "desc": "trader_publish_direct_get"
+    },
+    "trader_publish_update_status": {
+        "queryString": "UPDATE stat.trader_publisher SET status = 'Reservation' WHERE id = ?",
+        "params": ["publisher_id"],
+        "desc": "trader_publish_update_status"
     },
     "trader_publish_list": {
         "queryString": "select * from trader_publisher tp where tp.link_num = ? ORDER BY tp.id DESC LIMIT ?, ?",

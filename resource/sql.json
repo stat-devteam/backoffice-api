@@ -210,7 +210,7 @@
         "desc": "reward get total by user where service_group"
     },
     "link_get_list_date_range": {
-        "queryString": "SELECT l.link_num as link_num, l.mbr_grp_id as mbr_grp_id, cast(l.mbr_id as char) as mbr_id,l.klip_address as klip_address, l.klip_new as klip_new, l.reg_dt as reg_dt , s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.klip_new IN (?) AND l.svc_grp_id IN (?) AND l.reg_dt BETWEEN ? AND ? ORDER BY reg_dt DESC LIMIT ?, ?;",
+        "queryString": "SELECT l.link_num as link_num, l.mbr_grp_id as mbr_grp_id, cast(l.mbr_id as char) as mbr_id,l.klip_address as klip_address, l.klip_new as klip_new, l.reg_dt as reg_dt, l.link_type, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.klip_new IN (?) AND l.svc_grp_id IN (?) AND l.reg_dt BETWEEN ? AND ? ORDER BY reg_dt DESC LIMIT ?, ?;",
         "params": ["start_date", "end_date", "page_offset", "page_size"],
         "desc": "link get list"
     },
@@ -220,7 +220,7 @@
         "desc": "link get total count"
     },
     "link_get_list_date_range_svc_num": {
-        "queryString": "SELECT l.link_num as link_num, l.mbr_grp_id as mbr_grp_id, cast(l.mbr_id as char) as mbr_id,l.klip_address as klip_address, l.klip_new as klip_new, l.reg_dt as reg_dt, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.klip_new IN (?) AND l.svc_grp_id IN (?) AND l.svc_id = ? AND l.reg_dt BETWEEN ? AND ? ORDER BY l.reg_dt DESC LIMIT ?, ?;",
+        "queryString": "SELECT l.link_num as link_num, l.mbr_grp_id as mbr_grp_id, cast(l.mbr_id as char) as mbr_id,l.klip_address as klip_address, l.klip_new as klip_new, l.reg_dt as reg_dt, l.link_type, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.klip_new IN (?) AND l.svc_grp_id IN (?) AND l.svc_id = ? AND l.reg_dt BETWEEN ? AND ? ORDER BY l.reg_dt DESC LIMIT ?, ?;",
         "params": ["start_date", "end_date", "page_offset", "page_size"],
         "desc": "link get list - service_num"
     },
@@ -230,7 +230,7 @@
         "desc": "link get total count - service_num"
     },
     "link_get_info_user": {
-        "queryString": "SELECT l.link_num as link_num, l.mbr_grp_id as mbr_grp_id, cast(l.mbr_id as char) as mbr_id,l.klip_address as klip_address, l.klip_new as klip_new, l.reg_dt as reg_dt, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_grp_id = ? AND l.mbr_id = ? AND l.svc_grp_id IN (?) AND l.klip_new IN (?)",
+        "queryString": "SELECT l.link_num as link_num, l.mbr_grp_id as mbr_grp_id, cast(l.mbr_id as char) as mbr_id,l.klip_address as klip_address, l.klip_new as klip_new, l.reg_dt as reg_dt, l.link_type, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_grp_id = ? AND l.mbr_id = ? AND l.svc_grp_id IN (?) AND l.klip_new IN (?)",
         "params": ["mbr_grp_id", "mbr_id"],
         "desc": "link get list"
     },
@@ -245,7 +245,7 @@
         "desc": "link_temp get list"
     },
     "link_get_info_user_svc_num": {
-        "queryString": "SELECT l.link_num as link_num, l.mbr_grp_id as mbr_grp_id, cast(l.mbr_id as char) as mbr_id,l.klip_address as klip_address, l.klip_new as klip_new, l.reg_dt as reg_dt, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_grp_id = ? AND l.mbr_id = ? AND l.svc_grp_id IN (?) AND l.klip_new IN (?) AND l.svc_id = ?",
+        "queryString": "SELECT l.link_num as link_num, l.mbr_grp_id as mbr_grp_id, cast(l.mbr_id as char) as mbr_id,l.klip_address as klip_address, l.klip_new as klip_new, l.reg_dt as reg_dt, l.link_type, s.name as svc_name, s.description as svc_desc, sg.name as sg_name from link l LEFT OUTER JOIN service s ON l.svc_id = s.svc_num LEFT OUTER JOIN service_group sg ON l.svc_grp_id = sg.svc_grp_id WHERE l.mbr_grp_id = ? AND l.mbr_id = ? AND l.svc_grp_id IN (?) AND l.klip_new IN (?) AND l.svc_id = ?",
         "params": ["mbr_grp_id", "mbr_id"],
         "desc": "link get list - svc_num"
     },
